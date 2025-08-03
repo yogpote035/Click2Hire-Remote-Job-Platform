@@ -10,6 +10,7 @@
 - **Name:** Yogesh Dattatray Pote
 - **Roll No:** 253331068
 - **Division:** A (Batch: C4)
+- **Department:** TY.B.Sc.CS
 
 **3. Guide Name:**
 
