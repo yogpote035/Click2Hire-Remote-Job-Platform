@@ -4,15 +4,16 @@
 
 **1. Title:** Click2Hire Remote Job Platform
 
-## 2. Project Done By
+**2. Project Done By:**
 
 - **Name:** Yogesh Dattatray Pote
 - **Roll No:** 253331068
 - **Division:** A (Batch: C4)
 
-## 3. Guide Name
+**3. Guide Name:**
 
 - **Guide:** Yogesh D. Pote
+  
 **4. Introduction:**
 In the digital economy, remote jobs have become increasingly popular. However, many job seekers face difficulties in accessing verified opportunities, and employers often struggle with remote hiring workflows. This project aims to bridge that gap by developing a secure, scalable, and user-friendly Remote Job Platform using the MERN stack (MongoDB, Express.js, React.js, Node.js). The platform connects job seekers and employers efficiently while providing administrative oversight.
 
