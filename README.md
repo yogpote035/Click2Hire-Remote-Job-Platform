@@ -1,8 +1,9 @@
-**Project Report: Remote Job Platform**
+# Project Report: 
+## Remote Job Platform (Topic: 61)
 
 ---
 
-**1. Title:** Click2Hire Remote Job Platform
+**1. Title:** Click2Hire - Remote Job Platform
 
 **2. Project Done By:**
 
