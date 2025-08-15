@@ -6,11 +6,14 @@ import HomePage from "./Components/HomePage/HomePage";
 import Navbar from "./General/Navbar";
 import SignupPage from "./Components/AuthenticationPages/SignupPage";
 import LoginPage from "./Components/AuthenticationPages/LoginPage";
+import { Toaster } from "react-hot-toast";
 function App() {
   return (
     <>
       <Navbar />
       {/* Main Content */}
+      <Toaster position="top-right" reverseOrder={false} />
+
       <div className="container mx-auto mt-10 mb-5">
         <Routes>
           <Route path="/" element={<HomePage />} />

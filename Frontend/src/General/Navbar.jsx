@@ -1,12 +1,19 @@
 import React, { useState, useRef, useEffect } from "react";
+import { useDispatch, useSelector } from "react-redux";
 import { Link } from "react-router-dom";
+import { logoutUser } from "../../AllStateStore/Authentication/AuthenticationSlice";
 
 const Navbar = () => {
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
   const sidebarRef = useRef(null);
   const [activeButton, setActiveButton] = useState("login");
-  let role = "jobseeker"; // "jobseeker" | "employer" | "admin"
-  let isAuthenticated = false;
+  const dispatch = useDispatch();
+  const role =
+    useSelector((state) => state.authentication.role) ||
+    localStorage.getItem("role");
+  const isAuthenticated = useSelector(
+    (state) => state.authentication.isAuthenticated
+  );
 
   // Close sidebar when clicking outside
   useEffect(() => {
@@ -28,8 +35,7 @@ const Navbar = () => {
   }, [isSidebarOpen]);
 
   const handleLogout = () => {
-    isAuthenticated = false;
-    setIsSidebarOpen(false);
+    dispatch(logoutUser());
   };
 
   return (
@@ -65,24 +71,33 @@ const Navbar = () => {
               </Link>
             )}
 
-            {!isAuthenticated ? (
+            {!isAuthenticated && (
               <>
                 <Link
                   to="/login"
                   onClick={() => setActiveButton("login")}
-                  className={`border border-blue-600 text-blue-600 px-4 py-1.5 rounded hover:bg-blue-50 ${activeButton === "login" ? "bg-blue-600 hover:bg-blue-700 text-white" : ""}`}
+                  className={`border border-blue-600 text-blue-600 px-4 py-1.5 rounded hover:bg-blue-50 ${
+                    activeButton === "login"
+                      ? "bg-blue-600 hover:bg-blue-700 text-white"
+                      : ""
+                  }`}
                 >
                   Login
                 </Link>
                 <Link
                   onClick={() => setActiveButton("signup")}
                   to="/signup"
-                  className={`border border-blue-600 text-blue-600 px-4 py-1.5 rounded hover:bg-blue-50 ${activeButton === "signup" ? "bg-blue-600 hover:bg-blue-700 text-white" : ""}`}
+                  className={`border border-blue-600 text-blue-600 px-4 py-1.5 rounded hover:bg-blue-50 ${
+                    activeButton === "signup"
+                      ? "bg-blue-600 hover:bg-blue-700 text-white"
+                      : ""
+                  }`}
                 >
                   Sign Up
                 </Link>
               </>
-            ) : (
+            )}
+            {isAuthenticated && (
               <>
                 <Link to="/profile" className="hover:text-blue-500">
                   Profile
