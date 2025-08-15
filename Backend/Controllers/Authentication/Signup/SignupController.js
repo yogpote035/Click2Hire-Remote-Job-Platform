@@ -1,5 +1,5 @@
-const JobSeekerModel = require("../../../Models/JobSeekerModel");
-const EmployerModel = require("../../../Models/EmployerModel");
+const JobSeekerModel = require("../../../Models/Employee/JobSeekerModel");
+const EmployerModel = require("../../../Models/Employer/EmployerModel");
 const bcrypt = require("bcrypt");
 const CreateToken = require("../../../Middleware/CreateToken");
 
@@ -10,14 +10,40 @@ module.exports.JobSeekerSignup = async (req, res) => {
     return res.status(400).json({ message: "All fields are required." });
   }
   try {
-    const existingUser = await JobSeekerModel.findOne({ email });
-    if (existingUser) {
-      return res.status(203).json({ message: "Email already exists." });
+    const existingUserJob = await JobSeekerModel.findOne({ email });
+    if (existingUserJob) {
+      return res
+        .status(203)
+        .json({ message: "Email already exists. As Employee" });
     }
-    const existingUserPhone = await JobSeekerModel.findOne({ mobileNumber });
-    if (!existingUser && existingUserPhone) {
-      return res.status(204).json({ message: "Phone Number Already exists." });
+
+    const existingUserEmployer = await EmployerModel.findOne({ email });
+    if (existingUserEmployer) {
+      return res
+        .status(203)
+        .json({ message: "Email already exists. As Employer" });
     }
+
+    const existingUserPhoneJobSeeker = await JobSeekerModel.findOne({
+      mobileNumber,
+    });
+
+    if (existingUserPhoneJobSeeker) {
+      return res
+        .status(204)
+        .json({ message: "Phone Number Already exists. As Employee" });
+    }
+
+    const existingUserPhoneEmployer = await EmployerModel.findOne({
+      mobileNumber,
+    });
+
+    if (existingUserPhoneEmployer) {
+      return res
+        .status(204)
+        .json({ message: "Phone Number Already exists. As Employer" });
+    }
+
     const hashedPassword = await bcrypt.hash(password, 10);
     const newUser = new JobSeekerModel({
       fullName,
@@ -54,14 +80,34 @@ module.exports.EmployerSignup = async (req, res) => {
     return res.status(400).json({ message: "All fields are required." });
   }
   try {
-    let existingUser;
-    existingUser = await EmployerModel.findOne({ email });
-    if (existingUser) {
-      return res.status(203).json({ message: "Email already exists." });
+    const existingUserEmployer = await EmployerModel.findOne({ email });
+    const existingUserJobseeker = await JobSeekerModel.findOne({ email });
+    if (existingUserEmployer) {
+      return res
+        .status(203)
+        .json({ message: "Email already exists. As Employer" });
     }
-    let existingUserPhone = await EmployerModel.findOne({ mobileNumber });
-    if (existingUserPhone) {
-      return res.status(204).json({ message: "Phone Number already exists." });
+    if (existingUserJobseeker) {
+      return res
+        .status(203)
+        .json({ message: "Email already exists. As Employee" });
+    }
+
+    let existingUserPhoneEmployer = await EmployerModel.findOne({
+      mobileNumber,
+    });
+    let existingUserPhoneEmployee = await JobSeekerModel.findOne({
+      mobileNumber,
+    });
+    if (existingUserPhoneEmployer) {
+      return res
+        .status(204)
+        .json({ message: "Phone Number already exists. As Employer" });
+    }
+    if (existingUserPhoneEmployee) {
+      return res
+        .status(204)
+        .json({ message: "Phone Number already exists. As Employee" });
     }
     const hashedPassword = await bcrypt.hash(password, 10);
     const newUser = new EmployerModel({

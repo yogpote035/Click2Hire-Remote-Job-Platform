@@ -44,8 +44,7 @@ function App() {
             to="/about"
             className="text-sm text-gray-600 hover:text-blue-600"
           >
-            About Us
-          </Link>
+            About Us </Link>
           <Link
             to="/contact"
             className="text-sm text-gray-600 hover:text-blue-600"

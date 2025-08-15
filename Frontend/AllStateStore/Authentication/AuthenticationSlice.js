@@ -238,7 +238,7 @@ export const otpSent = (email) => async (dispatch, getState) => {
       toast.error("Email Not Found. Please try again,or Verify Email.");
       dispatch(
         otpFailure(
-          response.data.message ||
+          response?.data?.message ||
             "Email Not Found. Please try again,or Verify Email."
         )
       );
@@ -295,7 +295,7 @@ export const verifyOtp =
       }
       if (response.status === 204) {
         Swal.close();
-        const msg = response.data.message || "Invalid OTP. Please try again.";
+        const msg = response?.data?.message || "Invalid OTP. Please try again.";
         toast.error(msg);
         dispatch(otpFailure(msg));
         return;
@@ -341,7 +341,10 @@ export const signupJobseeker =
       );
       if (response.status === 203) {
         Swal.close();
-        toast.error("Email already exists. Please try another email.");
+        toast.error(
+          response?.data?.message ||
+            "Email already exists. Please try another email."
+        );
         dispatch(
           signupFailure(response.data.message || "Email already exists.")
         );
@@ -350,7 +353,7 @@ export const signupJobseeker =
       if (response.status === 204) {
         Swal.close();
         let msg =
-          response.data.message ||
+          response?.data?.message ||
           "Mobile number already exists. Please try another mobile number.";
         toast.error(msg);
         dispatch(signupFailure(msg));
@@ -388,7 +391,10 @@ export const signupEmployer =
       );
       if (response.status === 203) {
         Swal.close();
-        toast.error("Email already exists. Please try another email.");
+        toast.error(
+          response?.data?.message ||
+            "Email already exists. Please try another email."
+        );
         dispatch(
           signupFailure(response.data.message || "Email already exists.")
         );
@@ -397,7 +403,7 @@ export const signupEmployer =
       if (response.status === 204) {
         Swal.close();
         let msg =
-          response.data.message ||
+          response?.data?.message ||
           "Mobile number already exists. Please try another mobile number.";
         toast.error(msg);
         dispatch(signupFailure(msg));
