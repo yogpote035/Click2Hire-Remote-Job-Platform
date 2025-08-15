@@ -1,12 +1,16 @@
 import React, { useState, useRef, useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { Link } from "react-router-dom";
+import { Link, useLocation } from "react-router-dom";
 import { logoutUser } from "../../AllStateStore/Authentication/AuthenticationSlice";
 
 const Navbar = () => {
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
   const sidebarRef = useRef(null);
-  const [activeButton, setActiveButton] = useState("login");
+  const location = useLocation();
+  location.pathname === "/login";
+  location.pathname === "/signup";
+  const [activeButton, setActiveButton] = useState(""); // Track active button state
+
   const dispatch = useDispatch();
   const role =
     useSelector((state) => state.authentication.role) ||
@@ -14,7 +18,16 @@ const Navbar = () => {
   const isAuthenticated = useSelector(
     (state) => state.authentication.isAuthenticated
   );
-
+  useEffect(() => {
+    // Update active button based on current path
+    if (location.pathname === "/login") {
+      setActiveButton("login");
+    } else if (location.pathname === "/signup") {
+      setActiveButton("signup");
+    } else {
+      setActiveButton("");
+    }
+  }, [location.pathname]);
   // Close sidebar when clicking outside
   useEffect(() => {
     const handleClickOutside = (event) => {
@@ -130,7 +143,7 @@ const Navbar = () => {
         } transition-transform duration-300 ease-in-out`}
       >
         {/* Sidebar Header */}
-        <div className="px-4 py-3 flex justify-between items-center border-b">
+        <div className="px-4 py-3 flex justify-between items-center border-b pb-9">
           <h2 className="text-lg font-bold text-blue-600">Menu</h2>
           <button
             className="text-gray-600 text-xl"
@@ -187,14 +200,14 @@ const Navbar = () => {
             <>
               <Link
                 to="/login"
-                className="block bg-blue-600 text-white px-4 py-1.5 rounded hover:bg-blue-700"
+                className="block bg-blue-600 text-white text-center px-4 py-1.5 rounded hover:bg-blue-700"
                 onClick={() => setIsSidebarOpen(false)}
               >
                 Login
               </Link>
               <Link
                 to="/signup"
-                className="block border border-blue-600 text-blue-600 px-4 py-1.5 rounded hover:bg-blue-50"
+                className="block border border-blue-600  text-center  text-blue-600 px-4 py-1.5 rounded hover:bg-blue-50"
                 onClick={() => setIsSidebarOpen(false)}
               >
                 Sign Up
