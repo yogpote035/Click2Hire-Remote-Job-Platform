@@ -19,38 +19,47 @@ function App() {
           <Route path="/" element={<HomePage />} />
           <Route path="/signup" element={<SignupPage />} />
           <Route path="/login" element={<LoginPage />} />
+
+          <Route
+            path="*"
+            element={
+              <div className="text-center font-bold text-4xl mt-40 mb-30 text-red-500">
+                Page Not Found
+              </div>
+            }
+          />
         </Routes>
       </div>
       {/* Footer */}
       <footer className="bg-gray-50 border-t border-gray-200 py-6 mt-12">
-        <div className="max-w-6xl mx-auto px-4 sm:flex sm:items-center sm:justify-between">
-          {/* Left */}
-          <p className="text-sm text-gray-600">
-            © {new Date().getFullYear()} Click2Hire. All rights reserved.
-          </p>
+      <div className="max-w-6xl mx-auto px-4 sm:flex sm:items-center sm:justify-between">
+        {/* Left */}
+        <p className="text-sm text-gray-600">
+          © {new Date().getFullYear()} Click2Hire. All rights reserved.
+        </p>
 
-          {/* Right */}
-          <div className="mt-4 sm:mt-0 flex space-x-4">
-            <Link
-              to="/about"
-              className="text-sm text-gray-600 hover:text-blue-600"
-            >
-              About Us
-            </Link>
-            <Link
-              to="/contact"
-              className="text-sm text-gray-600 hover:text-blue-600"
-            >
-              Contact
-            </Link>
-            <Link
-              to="/privacy"
-              className="text-sm text-gray-600 hover:text-blue-600"
-            >
-              Privacy Policy
-            </Link>
-          </div>
+        {/* Right */}
+        <div className="mt-4 sm:mt-0 flex space-x-4">
+          <Link
+            to="/about"
+            className="text-sm text-gray-600 hover:text-blue-600"
+          >
+            About Us
+          </Link>
+          <Link
+            to="/contact"
+            className="text-sm text-gray-600 hover:text-blue-600"
+          >
+            Contact
+          </Link>
+          <Link
+            to="/privacy"
+            className="text-sm text-gray-600 hover:text-blue-600"
+          >
+            Privacy Policy
+          </Link>
         </div>
+      </div>
       </footer>
     </>
   );
