@@ -259,7 +259,6 @@ export default function CreateJobSeekerProfile() {
               label="Expected Salary"
               value={form.expectedSalary}
               onChange={(v) => setField("expectedSalary", v)}
-              min={0}
               required
             />
           </Grid>
