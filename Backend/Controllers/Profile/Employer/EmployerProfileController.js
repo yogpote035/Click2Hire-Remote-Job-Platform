@@ -11,7 +11,12 @@ const isValidURL = (url) => /^https?:\/\/.+\..+/.test(url);
 
 exports.createEmployerProfile = async (req, res) => {
   console.log("Request receive in createProfile Employer");
-
+  if (req.user.role === "jobseeker") {
+    return res.status(401).json({
+      success: false,
+      message: "Unauthorized Access",
+    });
+  }
   try {
     const {
       companyName,
@@ -106,6 +111,12 @@ exports.createEmployerProfile = async (req, res) => {
 
 exports.getAllEmployers = async (req, res) => {
   try {
+    if (req.user.role === "jobseeker") {
+      return res.status(401).json({
+        success: false,
+        message: "Unauthorized Access",
+      });
+    }
     const profiles = await EmployerProfileModel.find().sort({ createdAt: -1 });
 
     res.status(200).json({
@@ -124,7 +135,12 @@ exports.getAllEmployers = async (req, res) => {
 
 exports.getEmployerById = async (req, res) => {
   console.log("Request receive in get pro Employer");
-
+  if (req.user.role === "jobseeker") {
+    return res.status(401).json({
+      success: false,
+      message: "Unauthorized Access",
+    });
+  }
   try {
     const profile = await EmployerProfileModel.find({
       userId: req.params.id || req.user.userId,
@@ -148,7 +164,12 @@ exports.getEmployerById = async (req, res) => {
 
 exports.updateEmployerProfile = async (req, res) => {
   console.log("Request receive in update employer pro");
-
+  if (req.user.role === "jobseeker") {
+    return res.status(401).json({
+      success: false,
+      message: "Unauthorized Access",
+    });
+  }
   try {
     const updates = req.body;
 
@@ -202,7 +223,12 @@ exports.updateEmployerProfile = async (req, res) => {
 
 exports.deleteEmployerProfile = async (req, res) => {
   console.log("Request receive in delete Employer pro");
-
+  if (req.user.role === "jobseeker") {
+    return res.status(401).json({
+      success: false,
+      message: "Unauthorized Access",
+    });
+  }
   try {
     const profile = await EmployerProfileModel.findOneAndDelete({
       userId: req.params.id || req.user.userId,
