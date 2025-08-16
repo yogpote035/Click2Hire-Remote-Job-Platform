@@ -138,6 +138,8 @@ export default function CreateEmployerProfile() {
           />
           <InputField
             label="Mobile Number"
+            type="number"
+            pattern="[0-9]{10}"
             value={form.mobileNumber}
             onChange={(v) => setField("mobileNumber", v)}
             required
@@ -146,6 +148,7 @@ export default function CreateEmployerProfile() {
             label="Company Website"
             value={form.companyWebsite}
             onChange={(v) => setField("companyWebsite", v)}
+            type="url"
             required
           />
           <InputField

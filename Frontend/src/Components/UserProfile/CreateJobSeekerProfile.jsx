@@ -168,7 +168,7 @@ export default function CreateJobSeekerProfile() {
         </h1>
       </header>
 
-      {(error  || loading) && (
+      {(error || loading) && (
         <div className="space-y-2 mb-4">
           {loading && <div className="text-blue-600">Loading…</div>}
           {error && <div className="text-red-600">{error}</div>}
@@ -195,6 +195,8 @@ export default function CreateJobSeekerProfile() {
             <TextInput
               required
               label="Mobile Number*"
+              type="number"
+              pattern="[0-9]{10}"
               value={form.mobileNumber}
               onChange={(v) => setField("mobileNumber", v)}
             />
@@ -209,18 +211,21 @@ export default function CreateJobSeekerProfile() {
             <TextInput
               required
               label="LinkedIn"
+              type="url"
               value={form.linkedinProfile}
               onChange={(v) => setField("linkedinProfile", v)}
             />
             <TextInput
               required
               label="GitHub"
+              type="url"
               value={form.githubProfile}
               onChange={(v) => setField("githubProfile", v)}
             />
             <TextInput
               required
               label="Portfolio URL"
+              type="url"
               value={form.portfolioUrl}
               onChange={(v) => setField("portfolioUrl", v)}
             />
