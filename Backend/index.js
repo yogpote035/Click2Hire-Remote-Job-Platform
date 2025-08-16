@@ -47,7 +47,14 @@ app.get("/", (req, res) => {
 // Authentication Routes
 app.use("/api/auth/login", require("./Routes/Authentication/Login/index"));
 app.use("/api/auth/signup", require("./Routes/Authentication/Signup/index"));
+// ----------------------------------------------------------------------------------------------------
+// Profile Routes
 
+// Jobseeker
+app.use("/api/profile/jobseeker", require("./Routes/JobSeekerRoutes/index"));
+// Employer
+app.use("/api/profile/employer", require("./Routes/EmployerRoutes/index"));
+// -----------------------------------------------------------------------------------------------------
 // ✅ Server Listening
 app.listen(PORT, () => {
   console.log(`Server listening on PORT ${PORT} ⛳`);

@@ -56,7 +56,6 @@ export default function SignupPage() {
       toast.warn("Please fill all fields");
       return;
     }
-    console.log("Job Seeker Signup Data:", formDataJobSeeker);
     dispatch(signupJobseeker(formDataJobSeeker, navigate));
   };
 
@@ -72,7 +71,6 @@ export default function SignupPage() {
       return;
     }
     e.preventDefault();
-    console.log("Employer Signup Data:", formDataEmployer);
     dispatch(signupEmployer(formDataEmployer, navigate));
   };
 

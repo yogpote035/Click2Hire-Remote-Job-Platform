@@ -2,6 +2,7 @@ import React, { useState, useRef, useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { Link, useLocation } from "react-router-dom";
 import { logoutUser } from "../../AllStateStore/Authentication/AuthenticationSlice";
+import { RxCross2 } from "react-icons/rx";
 
 const Navbar = () => {
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
@@ -143,13 +144,13 @@ const Navbar = () => {
         } transition-transform duration-300 ease-in-out`}
       >
         {/* Sidebar Header */}
-        <div className="px-4 py-3 flex justify-between items-center border-b pb-9">
+        <div className="px-4 py-5 flex justify-between items-center border-b pb-7">
           <h2 className="text-lg font-bold text-blue-600">Menu</h2>
           <button
-            className="text-gray-600 text-xl"
+            className="text-gray-600 font-bold text-xl"
             onClick={() => setIsSidebarOpen(false)}
           >
-            ✖
+            <RxCross2 size={25} />
           </button>
         </div>
 

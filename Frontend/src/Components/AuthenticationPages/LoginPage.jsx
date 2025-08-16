@@ -29,7 +29,6 @@ export default function LoginPage() {
   // Handlers
   const handleEmailLogin = (e) => {
     e.preventDefault();
-    console.log("Email login data:", emailLogin);
     dispatch(
       loginEmailPassword(emailLogin.email, emailLogin.password, navigate)
     );
@@ -37,7 +36,6 @@ export default function LoginPage() {
 
   const handleMobilePasswordLogin = (e) => {
     e.preventDefault();
-    console.log("Mobile + Password login data:", mobilePasswordLogin);
     dispatch(
       loginNumberPassword(
         mobilePasswordLogin.mobile,
@@ -49,7 +47,6 @@ export default function LoginPage() {
 
   const handleEmailOtpLogin = (e) => {
     e.preventDefault();
-    console.log("Email + OTP login data:", emailOtpLogin);
     dispatch(verifyOtp(emailOtpLogin.email, emailOtpLogin.otp, navigate));
   };
 
