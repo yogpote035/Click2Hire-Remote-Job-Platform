@@ -91,7 +91,7 @@ function EmployerProfileShow() {
     }
   };
   return (
-    <div className="max-w-6xl mx-auto px-6 py-12 mt-12 bg-gradient-to-b from-white to-gray-50 rounded-2xl shadow-xl">
+    <div className="max-w-6xl mx-auto px-6 py-12 mt-18 bg-gradient-to-b from-white to-gray-50 rounded-2xl shadow-xl">
       <h1 className="text-indigo-700 text-center font-extrabold text-4xl mb-12 tracking-wide">
         Employer Profile
       </h1>

@@ -161,7 +161,7 @@ export default function CreateJobSeekerProfile() {
   };
 
   return (
-    <div className="max-w-5xl mt-15 mx-auto p-4 md:p-6">
+    <div className="max-w-5xl mt-18 mx-auto p-4 md:p-6">
       <header className="mb-6">
         <h1 className="text-2xl font-semibold">
           {id ? "Edit Job Seeker Profile" : "Create Job Seeker Profile"}
@@ -176,7 +176,6 @@ export default function CreateJobSeekerProfile() {
       )}
 
       <form onSubmit={handleSubmit} className="space-y-8">
-        {/* ------------------- Basic Info ------------------- */}
         <Section title="Basic Information">
           <Grid>
             <TextInput
@@ -238,7 +237,6 @@ export default function CreateJobSeekerProfile() {
           </Grid>
         </Section>
 
-        {/* ------------------- About & Preferences ------------------- */}
         <Section title="About & Preferences">
           <Grid>
             <TextArea
@@ -304,7 +302,6 @@ export default function CreateJobSeekerProfile() {
           />
         </Section>
 
-        {/* ------------------- Education ------------------- */}
         <Section title="Education">
           <button
             type="button"
@@ -356,7 +353,6 @@ export default function CreateJobSeekerProfile() {
           </div>
         </Section>
 
-        {/* ------------------- Projects ------------------- */}
         <Section title="Projects">
           <button
             type="button"
@@ -441,7 +437,6 @@ export default function CreateJobSeekerProfile() {
           </div>
         </Section>
 
-        {/* ------------------- Actions ------------------- */}
         <div className="flex items-center gap-3">
           <button
             type="submit"

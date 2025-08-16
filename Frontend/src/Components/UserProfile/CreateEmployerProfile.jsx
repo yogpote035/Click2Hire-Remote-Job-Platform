@@ -108,7 +108,7 @@ export default function CreateEmployerProfile() {
   };
 
   return (
-    <div className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 py-10">
+    <div className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 py-10 mt-15">
       <div className="bg-white shadow-lg rounded-2xl p-6 sm:p-10 border">
         <h2 className="text-2xl sm:text-3xl font-bold mb-6 text-gray-800 text-center">
           {id ? "Edit Employer Profile" : "Create Employer Profile"}
@@ -229,7 +229,7 @@ export default function CreateEmployerProfile() {
                 <button
                   type="button"
                   onClick={() => removeSocialLink(idx)}
-                  className="text-red-600 font-bold self-start sm:self-center"
+                  className="text-red-600 font-bold self-start sm:self-center cursor-pointer"
                 >
                   ×
                 </button>
@@ -293,7 +293,7 @@ function InputField({ label, value, onChange, type = "text", required }) {
 }
 
 /* Reusable TextArea */
-function TextArea({ label, value, onChange, rows = 3, required }) {
+function TextArea({ label, value, onChange, rows = 5, required }) {
   return (
     <label className="block w-full">
       <span className="text-sm text-gray-700">{label}</span>
