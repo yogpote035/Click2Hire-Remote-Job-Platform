@@ -48,28 +48,6 @@ const jobApplicationSchema = new mongoose.Schema(
   { timestamps: true }
 );
 
-// After save --> increment application count in JobPosting
-jobApplicationSchema.post("save", async function (doc) {
-  try {
-    const JobPostingModel = require("../Employer/JobPostingModel");
-    const job = await JobPostingModel.findById(doc.jobPostId);
-    if (job) await job.incrementApplications();
-  } catch (err) {
-    console.error("Error incrementing application count:", err);
-  }
-});
-
-// After remove --> decrement application count in JobPosting
-jobApplicationSchema.post("delete", async function (doc) {
-  try {
-    const JobPostingModel = require("../Employer/JobPostingModel");
-    const job = await JobPostingModel.findById(doc.jobPostId);
-    if (job) await job.decrementApplications();
-  } catch (err) {
-    console.error("Error decrementing application count:", err);
-  }
-});
-
 const JobApplicationModel = mongoose.model(
   "JobApplicationModel",
   jobApplicationSchema

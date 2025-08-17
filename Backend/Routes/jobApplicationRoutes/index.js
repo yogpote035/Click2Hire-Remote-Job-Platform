@@ -18,6 +18,17 @@ router.get(
 router.get("/:id", VerifyToken, jobApplicationController.getApplication);
 
 // Withdraw (delete) an application
-router.delete("/withdraw/:id",VerifyToken, jobApplicationController.withdrawApplication);
+router.delete(
+  "/withdraw/:id",
+  VerifyToken,
+  jobApplicationController.withdrawApplication
+);
+
+// download application
+router.get(
+  "/:id/download",
+  VerifyToken,
+  jobApplicationController.downloadApplication
+);
 
 module.exports = router;

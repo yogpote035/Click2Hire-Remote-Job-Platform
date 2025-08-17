@@ -28,6 +28,10 @@ const jobApplicationSlice = createSlice({
       state.success = true;
       state.application = action.payload;
     },
+    requestDownloadSuccess: (state, action) => {
+      state.loading = false;
+      state.success = true;
+    },
     requestMultipleSuccess: (state, action) => {
       state.loading = false;
       state.success = true;
@@ -52,38 +56,39 @@ export const {
   requestMultipleSuccess,
   requestFail,
   clearApplication,
+  requestDownloadSuccess,
 } = jobApplicationSlice.actions;
 
 export default jobApplicationSlice.reducer;
 
-
 // Apply for a Job
-export const applyForJob = (formData, navigate) => async (dispatch, getState) => {
-  dispatch(requestStart());
-  Swal.fire({
-    title: "Submitting Application...",
-    allowOutsideClick: false,
-    didOpen: () => Swal.showLoading(),
-  });
-  try {
-    const token =
-      getState().authentication.token || localStorage.getItem("token");
+export const applyForJob =
+  (formData, navigate) => async (dispatch, getState) => {
+    dispatch(requestStart());
+    Swal.fire({
+      title: "Submitting Application...",
+      allowOutsideClick: false,
+      didOpen: () => Swal.showLoading(),
+    });
+    try {
+      const token =
+        getState().authentication.token || localStorage.getItem("token");
 
-    const { data } = await axios.post(
-      `${import.meta.env.VITE_BACKEND_API}/jobseeker/apply-job/apply`,
-      formData,
-      { headers: { Authorization: `Bearer ${token}` } }
-    );
+      const { data } = await axios.post(
+        `${import.meta.env.VITE_BACKEND_API}/jobseeker/apply-job/apply`,
+        formData,
+        { headers: { Authorization: `Bearer ${token}` } }
+      );
 
-    Swal.close();
-    dispatch(requestSuccess(data?.data));
-    toast.success("Application submitted successfully!");
-    navigate("/my-applications"); // redirect to user's applications
-  } catch (error) {
-    Swal.close();
-    dispatch(requestFail(error.response?.data?.message || error.message));
-  }
-};
+      Swal.close();
+      dispatch(requestSuccess(data?.data));
+      toast.success("Application submitted successfully!");
+      navigate("/my-applications"); // redirect to user's applications
+    } catch (error) {
+      Swal.close();
+      dispatch(requestFail(error.response?.data?.message || error.message));
+    }
+  };
 
 // Get All Applications of current Jobseeker
 export const getMyApplications = () => async (dispatch, getState) => {
@@ -129,37 +134,83 @@ export const getApplication = (id) => async (dispatch, getState) => {
 };
 
 // Withdraw/Delete Application
-export const deleteApplication = (id,navigate) => async (dispatch, getState) => {
-  const confirm = await deleteConfirm(
-    "Withdraw Application?",
-    "This action cannot be undone."
-  );
-  if (confirm === true) {
-    dispatch(requestStart());
-    Swal.fire({
-      title: "Withdrawing application...",
-      allowOutsideClick: false,
-      didOpen: () => Swal.showLoading(),
-    });
-    try {
-      const token =
-        getState().authentication.token || localStorage.getItem("token");
+export const deleteApplication =
+  (id, jobId, navigate) => async (dispatch, getState) => {
+    const confirm = await deleteConfirm(
+      "Withdraw Application?",
+      "This action cannot be undone."
+    );
+    if (confirm === true) {
+      dispatch(requestStart());
+      Swal.fire({
+        title: "Withdrawing application...",
+        allowOutsideClick: false,
+        didOpen: () => Swal.showLoading(),
+      });
+      try {
+        const token =
+          getState().authentication.token || localStorage.getItem("token");
 
-      await axios.delete(
-        `${import.meta.env.VITE_BACKEND_API}/jobseeker/apply-job/withdraw/${id}`,
-        { headers: { Authorization: `Bearer ${token}` } }
-      );
+        await axios.delete(
+          `${
+            import.meta.env.VITE_BACKEND_API
+          }/jobseeker/apply-job/withdraw/${id}`,
+          {
+            params: {
+              jobId: jobId,
+            },
+            headers: { Authorization: `Bearer ${token}` },
+          }
+        );
 
-      Swal.close();
-      toast.success("Application withdrawn successfully!");
-      navigate("/my-applications")
-      dispatch(clearApplication());
-    } catch (error) {
-      Swal.close();
-      dispatch(requestFail(error.response?.data?.message || error.message));
+        Swal.close();
+        toast.success("Application withdrawn successfully!");
+        navigate("/my-applications");
+        dispatch(clearApplication());
+      } catch (error) {
+        Swal.close();
+        dispatch(requestFail(error.response?.data?.message || error.message));
+      }
     }
+  };
+
+// Download Application as PDF
+export const downloadApplication = (id) => async (dispatch, getState) => {
+  dispatch(requestStart());
+  Swal.fire({
+    title: "Preparing your application PDF...",
+    allowOutsideClick: false,
+    didOpen: () => Swal.showLoading(),
+  });
+
+  try {
+    const token =
+      getState().authentication.token || localStorage.getItem("token");
+
+    const response = await axios.get(
+      `${import.meta.env.VITE_BACKEND_API}/jobseeker/apply-job/${id}/download`,
+      {
+        headers: { Authorization: `Bearer ${token}` },
+        responseType: "blob", // important for file download
+      }
+    );
+
+    Swal.close();
+
+    // Create a URL for the blob and force download
+    const blob = new Blob([response.data], { type: "application/pdf" });
+    const url = window.URL.createObjectURL(blob);
+
+    const link = document.createElement("a");
+    link.href = url;
+    link.setAttribute("download", `application-${id}.pdf`);
+    document.body.appendChild(link);
+    link.click();
+    link.remove();
+    dispatch(requestDownloadSuccess());
+    toast.success("Application downloaded successfully!");
+  } catch (error) {
+    Swal.close();
+    dispatch(requestFail(error.response?.data?.message || error.message));
   }
 };
-
-
-// Below other Route

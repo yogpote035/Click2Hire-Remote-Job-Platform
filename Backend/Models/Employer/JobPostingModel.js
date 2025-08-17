@@ -128,19 +128,5 @@ const jobPostingSchema = new mongoose.Schema(
   { timestamps: true }
 );
 
-// Increment Application Count
-jobPostingSchema.methods.incrementApplications = async function () {
-  this.applicationCount += 1;
-  await this.save();
-};
-
-// Decrement Application Count
-jobPostingSchema.methods.decrementApplications = async function () {
-  if (this.applicationCount > 0) {
-    this.applicationCount -= 1;
-    await this.save();
-  }
-};
-
 const JobPostingModel = mongoose.model("JobPostingModel", jobPostingSchema);
 module.exports = JobPostingModel;

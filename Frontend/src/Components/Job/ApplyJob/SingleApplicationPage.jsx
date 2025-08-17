@@ -4,6 +4,7 @@ import { useNavigate, useParams } from "react-router-dom";
 import {
   getApplication,
   deleteApplication,
+  downloadApplication,
 } from "../../../../AllStateStore/JobSeeker/JobApplicationSlice";
 
 const SingleApplicationPage = () => {
@@ -28,7 +29,7 @@ const SingleApplicationPage = () => {
     );
 
   return (
-    <div className="max-w-5xl mx-auto p-6  bg-white rounded-lg shadow-lg">
+    <div className="max-w-5xl mx-auto p-6 mb-5 bg-white rounded-lg shadow-lg">
       <h2 className="text-2xl font-bold mb-6">Application Details</h2>
 
       {/* Job Info */}
@@ -100,7 +101,7 @@ const SingleApplicationPage = () => {
       </div>
 
       {/* Resume & Cover Letter */}
-      <div className="mb-8">
+      <div className="mb-4">
         <h3 className="text-lg font-semibold mb-2">Documents</h3>
         <div className="space-y-2">
           <a
@@ -120,10 +121,24 @@ const SingleApplicationPage = () => {
           >
             📝 View Cover Letter
           </a>
-          <div className="flex justify-center">
+          <div className="flex justify-between mt-4">
             <button
               onClick={() => {
-                dispatch(deleteApplication(application._id, navigate));
+                dispatch(downloadApplication(application._id));
+              }}
+              className="bg-orange-500 hover:bg-orange-600 p-2 px-4 rounded block text-white"
+            >
+              Download Application
+            </button>
+            <button
+              onClick={() => {
+                dispatch(
+                  deleteApplication(
+                    application._id,
+                    application.jobPostId._id,
+                    navigate
+                  )
+                );
               }}
               className="bg-red-500 hover:bg-red-600 p-2 px-4 rounded block text-white"
             >

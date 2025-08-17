@@ -1,6 +1,9 @@
 import React, { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { getMyApplications } from "../../../../AllStateStore/JobSeeker/JobApplicationSlice";
+import {
+  downloadApplication,
+  getMyApplications,
+} from "../../../../AllStateStore/JobSeeker/JobApplicationSlice";
 import { Link, useNavigate } from "react-router-dom";
 
 const MyApplicationsPage = () => {
@@ -68,28 +71,36 @@ const MyApplicationsPage = () => {
 
               {/* Resume & Cover Letter URLs */}
               <div className="mt-3 space-x-4">
-                <a
+                {/* <a
                   href={app.resume}
                   target="_blank"
                   rel="noopener noreferrer"
                   className="text-white bg-gray-800 hover:bg-gray-900 p-1 rounded px-2 shadow hover:shadow-2xl hover:underline"
                 >
                   View Resume
-                </a>
-                <a
+                </a> */}
+                {/* <a
                   href={app.coverLetter}
                   target="_blank"
                   rel="noopener noreferrer"
                   className="text-white bg-gray-800 hover:bg-gray-900 p-1 rounded px-2 shadow hover:shadow-2xl hover:underline"
                 >
                   View Cover Letter
-                </a>
+                </a> */}
                 <Link
                   to={`/my-application/${app._id}`}
                   className="text-white bg-gray-800 hover:bg-gray-900 p-1 rounded px-2 shadow hover:shadow-2xl hover:underline"
                 >
                   View Application
                 </Link>
+                <button
+                  onClick={() => {
+                    dispatch(downloadApplication(app._id));
+                  }}
+                  className="text-white bg-gray-800 hover:bg-gray-900 p-1 rounded px-2 shadow hover:shadow-2xl "
+                >
+                  Download Application
+                </button>
               </div>
             </div>
 
