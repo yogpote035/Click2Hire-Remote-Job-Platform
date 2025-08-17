@@ -160,6 +160,8 @@ function JobSeekerProfileShow() {
                       🔗{" "}
                       <a
                         href={pr.sourceCode}
+                        rel="noreferrer"
+                        target="_blank"
                         className="text-blue-600 hover:underline"
                       >
                         Source
@@ -167,6 +169,8 @@ function JobSeekerProfileShow() {
                       |{" "}
                       <a
                         href={pr.liveUrl}
+                        target="_blank"
+                        rel="noreferrer"
                         className="text-green-600 hover:underline"
                       >
                         Live
