@@ -34,7 +34,7 @@ function JobSeekerProfileShow() {
       </div>
     );
   return (
-    <div className="max-w-5xl mx-auto p-8 mt-25 bg-gradient-to-br from-gray-50 to-white rounded-2xl shadow-xl border border-gray-200">
+    <div className="max-w-5xl mx-auto p-8 mt-3 bg-gradient-to-br from-gray-50 to-white rounded-2xl shadow-xl border border-gray-200">
       <h1 className="text-blue-600 text-center font-extrabold text-4xl mb-10">
         Job Seeker Profile
       </h1>

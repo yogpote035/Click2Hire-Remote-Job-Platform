@@ -13,6 +13,12 @@ import JobseekerProfileShow from "./Components/UserProfile/JobseekerProfileShow"
 import EmployerProfileShow from "./Components/UserProfile/EmployerProfileShow";
 import CreateEmployeeProfile from "./Components/UserProfile/CreateJobSeekerProfile";
 import CreateEmployerProfile from "./Components/UserProfile/CreateEmployerProfile";
+import EmployerJobs from "./Components/Job/JobPost/EmployerJobs";
+import AllJobsForSeeker from "./Components/Job/AllJobs";
+import SingleJobView from "./Components/Job/SingleJobView";
+import ApplyJobPage from "./Components/Job/ApplyJob/ApplyJobPage";
+import MyApplicationsPage from "./Components/Job/ApplyJob/MyApplicationsPage";
+import SingleApplicationPage from "./Components/Job/ApplyJob/SingleApplicationPage";
 function App() {
   const role =
     useSelector((state) => state.authentication.role) ||
@@ -29,7 +35,7 @@ function App() {
         }}
       />
 
-      <div className="container mx-auto mt-10 mb-5">
+      <div className="container mx-auto mt-10 py-10 mb-5">
         <Routes>
           <Route path="/" element={<HomePage />} />
           <Route path="/signup" element={<SignupPage />} />
@@ -74,6 +80,55 @@ function App() {
               </ProtectedRoutes>
             }
           />
+          {/* Job Route Show And ... */}
+          <Route path="/jobs" element={<AllJobsForSeeker />} />
+          <Route path="/job/:id" element={<SingleJobView />} />
+          {/* Apply Job Routes */}
+          <Route
+            path="/apply-job/:id"
+            element={
+              <ProtectedRoutes>
+                <ApplyJobPage />
+              </ProtectedRoutes>
+            }
+          />
+          <Route
+            path="/my-applications"
+            element={
+              <ProtectedRoutes>
+                <MyApplicationsPage />
+              </ProtectedRoutes>
+            }
+          />
+          <Route
+            path="/my-application/:id"
+            element={
+              <ProtectedRoutes>
+                <SingleApplicationPage />
+              </ProtectedRoutes>
+            }
+          />
+          {/* Job Post Routes */}
+          {role === "employer" && (
+            <Route
+              path="post-job"
+              element={
+                <ProtectedRoutes>
+                  <EmployerJobs />
+                </ProtectedRoutes>
+              }
+            />
+          )}
+          {role === "employer" && (
+            <Route
+              path="post-job/:id"
+              element={
+                <ProtectedRoutes>
+                  <SingleJobView />
+                </ProtectedRoutes>
+              }
+            />
+          )}
           <Route
             path="*"
             element={
@@ -85,7 +140,7 @@ function App() {
         </Routes>
       </div>
       {/* Footer */}
-      <footer className="bg-gray-50 border-t border-gray-200 py-6 mt-12">
+      <footer className="bg-gray-50 border-t fixed bottom-0 left-0 w-full border-gray-200 py-6 mt-12">
         <div className="max-w-6xl mx-auto px-4 sm:flex sm:items-center sm:justify-between">
           {/* Left */}
           <p className="text-sm text-gray-600">

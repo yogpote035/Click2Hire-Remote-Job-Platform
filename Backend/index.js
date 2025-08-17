@@ -51,11 +51,29 @@ app.use("/api/auth/signup", require("./Routes/Authentication/Signup/index"));
 // Profile Routes
 
 // Jobseeker
-app.use("/api/profile/jobseeker", require("./Routes/JobSeekerRoutes/index"));
+app.use(
+  "/api/profile/jobseeker",
+  require("./Routes/JobSeekerProfileRoutes/index")
+);
 // Employer
-app.use("/api/profile/employer", require("./Routes/EmployerRoutes/index"));
+app.use(
+  "/api/profile/employer",
+  require("./Routes/EmployerProfileRoutes/index")
+);
 // -----------------------------------------------------------------------------------------------------
-// ✅ Server Listening
+// Job posting And Operations Routes
+app.use("/api/employer/job-post", require("./Routes/JobPostingRoutes/index"));
+// -----------------------------------------------------------------------------------------------------
+
+// Apply Job And Operations Routes
+app.use("/api/jobseeker/apply-job", require("./Routes/jobApplicationRoutes/index"));
+// -----------------------------------------------------------------------------------------------------
+
+app.use("/api/job", require("./Routes/JobRoutes/index"));
+
+// -----------------------------------------------------------------------------------------------------
+
+// Server Listening
 app.listen(PORT, () => {
   console.log(`Server listening on PORT ${PORT} ⛳`);
 });
