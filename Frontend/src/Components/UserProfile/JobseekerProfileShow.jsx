@@ -153,7 +153,9 @@ function JobSeekerProfileShow() {
                     </p>
                     <p className="text-gray-600">{pr.description}</p>
                     <p className="text-sm text-gray-500 mt-2">
-                      Skills: {pr.skills?.join(", ")} | Tech:{" "}
+                      <span className="font-bold">Skills:</span>{" "}
+                      {pr.skills?.join(", ")} <br />{" "}
+                      <span className="font-bold">Tech:</span>{" "}
                       {pr.technologies?.join(", ")}
                     </p>
                     <p className="text-sm mt-1">
