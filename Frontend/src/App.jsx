@@ -21,7 +21,13 @@ function App() {
     <>
       <Navbar />
       {/* Main Content */}
-      <Toaster position="top-right" reverseOrder={false} />
+      <Toaster
+        position="top-right"
+        reverseOrder={false}
+        containerStyle={{
+          top: 80,
+        }}
+      />
 
       <div className="container mx-auto mt-10 mb-5">
         <Routes>
