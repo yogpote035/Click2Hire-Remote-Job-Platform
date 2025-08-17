@@ -112,6 +112,7 @@ This project delivers a complete remote job platform aimed at simplifying job di
 - Express.js & Node.js Docs
 - TutorialsPoint, GeeksforGeeks
 - YouTube: JavaScript Mastery, Codevolution
+- ChatGpt: UI Improvement, Bugs and logical Issue
 
 ---
 
