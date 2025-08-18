@@ -8,6 +8,9 @@ const VerifyToken = require("../../Middleware/VerifyToken");
 router.post("/", VerifyToken, jobPostingController.createJobPosting);
 router.get("/my-jobs", VerifyToken, jobPostingController.getMyJobs);
 router.get("/:id",VerifyToken, jobPostingController.getJobById); 
+router.get("/all-application/:id",VerifyToken, jobPostingController.AllApplicationForJob); //all application for a job
+router.get("/single-application/:id/:profileId",VerifyToken, jobPostingController.SingleApplicationForJob); //single application for a job
+router.put("/single-application/update-status/:id",VerifyToken, jobPostingController.SingleApplicationForJobUpdateStatusByEmployer); //single application for a job
 router.put("/:id", VerifyToken, jobPostingController.updateJobPosting);
 router.delete("/:id", VerifyToken, jobPostingController.deleteJobPosting);
 router.put("/:id/close", VerifyToken, jobPostingController.closeJob);

@@ -27,21 +27,21 @@ export default function CreateJobSeekerProfile() {
     profilePicture:
       "https://img.freepik.com/premium-vector/man-avatar-profile-picture-vector-illustration_268834-538.jpg",
     skills: [],
-    experience: "No experience listed",
+    experience: "",
     projects: [],
     education: [],
     certifications: [],
     languages: [],
-    linkedinProfile: "Not Provided",
-    githubProfile: "Not Provided",
-    location: "Not specified",
-    about: "No information provided",
-    resumeUrl: "Not Provided",
+    linkedinProfile: "",
+    githubProfile: "",
+    location: "",
+    about: "",
+    resumeUrl: "",
     role: "jobseeker",
-    portfolioUrl: "Not Provided",
-    jobPreferences: "Not specified",
+    portfolioUrl: "",
+    jobPreferences: "",
     availability: "Available",
-    expectedSalary: 0,
+    expectedSalary: "",
   });
 
   // Populate form if editing
@@ -86,12 +86,12 @@ export default function CreateJobSeekerProfile() {
       projects: [
         ...(prev.projects || []),
         {
-          title: "Title Not Provided",
-          description: "Description Not Provided",
+          title: "",
+          description: "",
           skills: [],
           technologies: [],
-          sourceCode: "No Url Provided",
-          liveUrl: "No Live Url Provided",
+          sourceCode: "",
+          liveUrl: "",
         },
       ],
     }));
@@ -116,10 +116,10 @@ export default function CreateJobSeekerProfile() {
       education: [
         ...(prev.education || []),
         {
-          degree: "Not Provided",
-          institution: "Not Provided",
-          year: "Not Provided",
-          CGPA: "Not Provided",
+          degree: "",
+          institution: "",
+          year: "",
+          CGPA: "",
         },
       ],
     }));
@@ -161,7 +161,7 @@ export default function CreateJobSeekerProfile() {
   };
 
   return (
-    <div className="max-w-5xl mt-18 mx-auto p-4 md:p-6">
+    <div className="max-w-5xl mx-auto p-4 md:p-6">
       <header className="mb-6">
         <h1 className="text-2xl font-semibold">
           {id ? "Edit Job Seeker Profile" : "Create Job Seeker Profile"}

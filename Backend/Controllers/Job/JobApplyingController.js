@@ -9,6 +9,8 @@ exports.applyForJob = async (req, res) => {
       return res.status(401).json({ message: "Only jobseekers can apply" });
     }
 
+    // If applied  then not accept second application
+
     const { jobPostId, resume, coverLetter } = req.body;
     if (!jobPostId || !resume) {
       return res.status(400).json({ message: "Job and Resume are required" });
@@ -28,6 +30,18 @@ exports.applyForJob = async (req, res) => {
       return res
         .status(401)
         .json({ message: "Job is Closed No Longer Application Accepting" });
+    }
+
+    const AppliedApplication = await JobApplicationModel.find({
+      jobPostId: jobPostId,
+      userProfileId: profile,
+    });
+   
+    if (AppliedApplication?.length) {
+      return res.status(400).json({
+        message:
+          "Your Application for This Job Already Exists, You Can Edit or Delete Application",
+      });
     }
     const application = new JobApplicationModel({
       jobPostId,

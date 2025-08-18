@@ -21,14 +21,7 @@ const SingleJobView = () => {
     return <p className="text-center mt-10 text-gray-500">Job not found.</p>;
 
   return (
-    <div className="max-w-4xl mx-auto p-6 mt-5 bg-white rounded-lg shadow-md">
-      <button
-        className="mb-4 text-blue-600 hover:underline"
-        onClick={() => navigate(-1)}
-      >
-        ← Back to jobs
-      </button>
-
+    <div className="max-w-4xl mx-auto p-6 mt-1 bg-white rounded-lg shadow-md">
       <h1 className="text-3xl font-bold text-gray-800">{job.title}</h1>
       <p className="text-gray-600 mt-2">{job.location}</p>
 
@@ -61,7 +54,7 @@ const SingleJobView = () => {
           Application Accepting
         </p>
       )}
-      
+
       {job.skillsRequired?.length > 0 && (
         <p className="mt-4 text-gray-700">
           <strong>Skills Required:</strong> {job.skillsRequired.join(", ")}
@@ -119,18 +112,19 @@ const SingleJobView = () => {
         {new Date(job.deadline).toLocaleDateString()}
       </p>
 
-      {job.status !== "Closed" && (
-        <div className="flex justify-center mt-5">
-          <button
-            onClick={() => {
-              navigate(`/apply-job/${job._id}`);
-            }}
-            className="bg-yellow-400 hover:bg-yellow-500 p-2 rounded-md px-4"
-          >
-            Apply This Job
-          </button>
-        </div>
-      )}
+      {job.status !== "Closed" &&
+        localStorage.getItem("role") === "jobseeker" && (
+          <div className="flex justify-center mt-5">
+            <button
+              onClick={() => {
+                navigate(`/apply-job/${job._id}`);
+              }}
+              className="bg-yellow-400 hover:bg-yellow-500 p-2 rounded-md px-4"
+            >
+              Apply This Job
+            </button>
+          </div>
+        )}
     </div>
   );
 };

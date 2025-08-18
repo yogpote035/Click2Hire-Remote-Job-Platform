@@ -108,7 +108,7 @@ export default function CreateEmployerProfile() {
   };
 
   return (
-    <div className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 py-10 mt-15">
+    <div className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 py-10 mt-1">
       <div className="bg-white shadow-lg rounded-2xl p-6 sm:p-10 border">
         <h2 className="text-2xl sm:text-3xl font-bold mb-6 text-gray-800 text-center">
           {id ? "Edit Employer Profile" : "Create Employer Profile"}

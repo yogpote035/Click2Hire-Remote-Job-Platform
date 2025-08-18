@@ -27,7 +27,7 @@ const employeeProfileSlice = createSlice({
     requestFail: (state, action) => {
       state.loading = false;
       state.error = action.payload;
-      toast.error(action.payload);
+      // toast.error(action.payload);
     },
     clearEmployeeError: (state) => {
       state.success = false;

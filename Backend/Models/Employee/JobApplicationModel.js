@@ -34,7 +34,6 @@ const jobApplicationSchema = new mongoose.Schema(
         "Interview",
         "Offered",
         "Rejected",
-        "Withdrawn",
       ],
       default: "Applied",
       required: true,

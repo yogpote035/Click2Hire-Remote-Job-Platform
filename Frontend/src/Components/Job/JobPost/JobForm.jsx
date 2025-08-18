@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from "react";
-
+import { format } from "date-fns";
+import { useNavigate } from "react-router-dom";
 const JobForm = ({ onSubmit, initialData = {} }) => {
   const [formData, setFormData] = useState({
     title: "",
@@ -8,6 +9,7 @@ const JobForm = ({ onSubmit, initialData = {} }) => {
     employmentType: "Full-Time",
     minSalary: "",
     maxSalary: "",
+    currency: "INR",
     skillsRequired: "",
     experienceLevel: "Entry",
     status: "Open",
@@ -24,7 +26,7 @@ const JobForm = ({ onSubmit, initialData = {} }) => {
     companyPerks: "",
     postedBy: "",
   });
-
+  const navigate = useNavigate();
   useEffect(() => {
     if (initialData && Object.keys(initialData).length > 0) {
       setFormData({
@@ -42,6 +44,7 @@ const JobForm = ({ onSubmit, initialData = {} }) => {
           : "",
         minSalary: initialData.salaryRange?.min || "",
         maxSalary: initialData.salaryRange?.max || "",
+        currency: initialData.salaryRange?.currency || "",
       });
     }
   }, [initialData]);
@@ -70,7 +73,7 @@ const JobForm = ({ onSubmit, initialData = {} }) => {
       salaryRange: {
         min: formData.minSalary,
         max: formData.maxSalary,
-        currency: "INR",
+        currency: formData.currency,
       },
     };
     onSubmit(dataToSubmit);
@@ -81,7 +84,6 @@ const JobForm = ({ onSubmit, initialData = {} }) => {
       <h1 className="text-3xl text-center font-bold mb-4">
         {initialData && initialData._id ? "Edit Job Post" : "Create Job Post"}
       </h1>
-
       {/* Job Title */}
       <div>
         <label className="block font-semibold mb-1">Job Title</label>
@@ -95,7 +97,6 @@ const JobForm = ({ onSubmit, initialData = {} }) => {
           className="border p-2 rounded w-full"
         />
       </div>
-
       {/* Job Description */}
       <div>
         <label className="block font-semibold mb-1">Job Description</label>
@@ -108,7 +109,6 @@ const JobForm = ({ onSubmit, initialData = {} }) => {
           className="border p-2 rounded w-full"
         />
       </div>
-
       {/* Location */}
       <div>
         <label className="block font-semibold mb-1">Location</label>
@@ -122,12 +122,12 @@ const JobForm = ({ onSubmit, initialData = {} }) => {
           className="border p-2 rounded w-full"
         />
       </div>
-
       {/* Employment Type */}
       <div>
         <label className="block font-semibold mb-1">Employment Type</label>
         <select
           name="employmentType"
+          required
           value={formData.employmentType}
           onChange={handleChange}
           className="border p-2 rounded w-full"
@@ -139,7 +139,25 @@ const JobForm = ({ onSubmit, initialData = {} }) => {
           <option value="Remote">Remote</option>
         </select>
       </div>
-
+      {/* Salary Currency */}
+      <div>
+        <label className="block font-semibold mb-1">Employment Type</label>
+        <select
+          name="currency"
+          required
+          value={formData.currency}
+          onChange={handleChange}
+          className="border p-2 rounded w-full"
+        >
+          <option disabled value="">
+            Select Currency
+          </option>
+          <option value="INR">Indian Rupees</option>
+          <option value="USD">USD</option>
+          <option value="EURO">EURO</option>
+          <option value="POUND">POUND</option>
+        </select>
+      </div>
       {/* Salary */}
       <div>
         <label className="block font-semibold mb-1">Salary Range</label>
@@ -162,7 +180,6 @@ const JobForm = ({ onSubmit, initialData = {} }) => {
           />
         </div>
       </div>
-
       {/* Skills */}
       <div>
         <label className="block font-semibold mb-1">Skills Required</label>
@@ -175,12 +192,12 @@ const JobForm = ({ onSubmit, initialData = {} }) => {
           className="border p-2 rounded w-full"
         />
       </div>
-
       {/* Experience Level */}
       <div>
         <label className="block font-semibold mb-1">Experience Level</label>
         <select
           name="experienceLevel"
+          required
           value={formData.experienceLevel}
           onChange={handleChange}
           className="border p-2 rounded w-full"
@@ -191,7 +208,6 @@ const JobForm = ({ onSubmit, initialData = {} }) => {
           <option value="Lead">Lead</option>
         </select>
       </div>
-
       {/* Vacancies */}
       <div>
         <label className="block font-semibold mb-1">Number of Vacancies</label>
@@ -201,23 +217,27 @@ const JobForm = ({ onSubmit, initialData = {} }) => {
           placeholder="Number of Vacancies"
           value={formData.vacancies}
           onChange={handleChange}
+          required
           min={1}
           className="border p-2 rounded w-full"
         />
       </div>
-
       {/* Deadline */}
       <div>
         <label className="block font-semibold mb-1">Application Deadline</label>
         <input
           type="date"
           name="deadline"
-          value={formData.deadline}
+          value={
+            formData.deadline
+              ? format(new Date(formData.deadline), "yyyy-MM-dd")
+              : ""
+          }
           onChange={handleChange}
           className="border p-2 rounded w-full"
+          required
         />
       </div>
-
       {/* Job Category */}
       <div>
         <label className="block font-semibold mb-1">Job Category</label>
@@ -228,9 +248,9 @@ const JobForm = ({ onSubmit, initialData = {} }) => {
           value={formData.jobCategory}
           onChange={handleChange}
           className="border p-2 rounded w-full"
+          required
         />
       </div>
-
       {/* Education Required */}
       <div>
         <label className="block font-semibold mb-1">Education Required</label>
@@ -241,9 +261,9 @@ const JobForm = ({ onSubmit, initialData = {} }) => {
           value={formData.educationRequired}
           onChange={handleChange}
           className="border p-2 rounded w-full"
+          required
         />
       </div>
-
       {/* Benefits */}
       <div>
         <label className="block font-semibold mb-1">Benefits</label>
@@ -254,13 +274,14 @@ const JobForm = ({ onSubmit, initialData = {} }) => {
           value={formData.benefits}
           onChange={handleChange}
           className="border p-2 rounded w-full"
+          required
         />
       </div>
-
       {/* Remote Option */}
       <div>
         <label className="block font-semibold mb-1">Work Location</label>
         <select
+          required
           name="remoteOption"
           value={formData.remoteOption}
           onChange={handleChange}
@@ -271,11 +292,11 @@ const JobForm = ({ onSubmit, initialData = {} }) => {
           <option value="Hybrid">Hybrid</option>
         </select>
       </div>
-
       {/* Job Level */}
       <div>
         <label className="block font-semibold mb-1">Job Level</label>
         <select
+          required
           name="jobLevel"
           value={formData.jobLevel}
           onChange={handleChange}
@@ -289,11 +310,11 @@ const JobForm = ({ onSubmit, initialData = {} }) => {
           <option value="Executive">Executive</option>
         </select>
       </div>
-
       {/* Work Schedule */}
       <div>
         <label className="block font-semibold mb-1">Work Schedule</label>
         <select
+          required
           name="workSchedule"
           value={formData.workSchedule}
           onChange={handleChange}
@@ -305,11 +326,11 @@ const JobForm = ({ onSubmit, initialData = {} }) => {
           <option value="Rotational">Rotational</option>
         </select>
       </div>
-
       {/* Languages */}
       <div>
         <label className="block font-semibold mb-1">Languages Required</label>
         <input
+          required
           type="text"
           name="languagesRequired"
           placeholder="Languages (comma separated)"
@@ -318,7 +339,6 @@ const JobForm = ({ onSubmit, initialData = {} }) => {
           className="border p-2 rounded w-full"
         />
       </div>
-
       {/* Application Method */}
       <div>
         <label className="block font-semibold mb-1">Application Method</label>
@@ -347,7 +367,6 @@ const JobForm = ({ onSubmit, initialData = {} }) => {
           <option value="Draft">Draft</option>
         </select>
       </div>
-
       {/* Company Perks */}
       <div>
         <label className="block font-semibold mb-1">Company Perks</label>
@@ -360,7 +379,6 @@ const JobForm = ({ onSubmit, initialData = {} }) => {
           className="border p-2 rounded w-full"
         />
       </div>
-
       {/* Posted By */}
       <div>
         <label className="block font-semibold mb-1">Posted By</label>
@@ -373,12 +391,20 @@ const JobForm = ({ onSubmit, initialData = {} }) => {
           className="border p-2 rounded w-full"
         />
       </div>
-
       <button
         type="submit"
         className="bg-green-600 text-white px-4 py-2 rounded mt-4"
       >
         {initialData && initialData._id ? "Update Job" : "Create Job"}
+      </button>
+      <button
+        type="button"
+        onClick={() => navigate(-1)}
+        className="bg-red-600 text-white px-4 py-2 rounded mt-4"
+      >
+        {initialData && initialData._id
+          ? "Cancel Update Job"
+          : "Cancel Create Job"}
       </button>
     </form>
   );

@@ -91,7 +91,7 @@ function EmployerProfileShow() {
     }
   };
   return (
-    <div className="max-w-6xl mx-auto px-6 py- bg-gradient-to-b from-white to-gray-50 rounded-2xl shadow-xl">
+    <div className="max-w-6xl mx-auto px-6 mb-15 bg-gradient-to-b from-white to-gray-50 rounded-2xl shadow-xl">
       <h1 className="text-indigo-700 text-center font-extrabold text-4xl mb-12 tracking-wide">
         Employer Profile
       </h1>
@@ -226,7 +226,7 @@ function EmployerProfileShow() {
           </div>
 
           {/* Actions */}
-          <div className="flex flex-wrap gap-4 justify-center md:justify-start">
+          <div className="flex flex-wrap gap-4 p-2 justify-center md:justify-start">
             <button
               onClick={handleEdit}
               className="px-6 py-2 bg-indigo-600 text-white rounded-lg hover:bg-indigo-700 shadow-md transition"
@@ -242,7 +242,7 @@ function EmployerProfileShow() {
           </div>
         </div>
       ) : (
-        <div className="text-center mt-20">
+        <div className="text-center mt-8">
           <p className="mb-4 text-gray-500 text-lg">
             No employer profile found.
           </p>

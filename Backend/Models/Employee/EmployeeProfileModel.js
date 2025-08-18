@@ -13,12 +13,10 @@ const EmployeeProfileSchema = new mongoose.Schema(
     email: {
       type: String,
       required: true,
-      unique: true,
     }, //done
     mobileNumber: {
       type: String,
       required: true,
-      unique: true,
     }, //done
     profilePicture: {
       type: String,

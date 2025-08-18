@@ -191,13 +191,12 @@ export const downloadApplication = (id) => async (dispatch, getState) => {
       `${import.meta.env.VITE_BACKEND_API}/jobseeker/apply-job/${id}/download`,
       {
         headers: { Authorization: `Bearer ${token}` },
-        responseType: "blob", // important for file download
+        responseType: "blob", 
       }
     );
 
     Swal.close();
 
-    // Create a URL for the blob and force download
     const blob = new Blob([response.data], { type: "application/pdf" });
     const url = window.URL.createObjectURL(blob);
 

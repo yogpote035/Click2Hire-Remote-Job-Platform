@@ -60,7 +60,7 @@ export default jobApplicationSlice.reducer;
 export const getAllJobs = () => async (dispatch, getState) => {
   dispatch(requestStart());
   Swal.fire({
-    title: "Fetching your applications...",
+    title: "Fetching Jobs...",
     allowOutsideClick: false,
     didOpen: () => Swal.showLoading(),
   });
@@ -85,6 +85,11 @@ export const getAllJobs = () => async (dispatch, getState) => {
 export const getSingleJob = (id) => async (dispatch, getState) => {
   dispatch(requestStart());
   try {
+    Swal.fire({
+      title: "Getting Job Information...",
+      allowOutsideClick: false,
+      didOpen: () => Swal.showLoading(),
+    });
     const token =
       getState().authentication.token || localStorage.getItem("token");
 
@@ -94,7 +99,9 @@ export const getSingleJob = (id) => async (dispatch, getState) => {
     );
 
     dispatch(requestSuccess(data.job));
+    Swal.close();
   } catch (error) {
+    Swal.close();
     dispatch(requestFail(error.response?.data?.message || error.message));
   }
 };
