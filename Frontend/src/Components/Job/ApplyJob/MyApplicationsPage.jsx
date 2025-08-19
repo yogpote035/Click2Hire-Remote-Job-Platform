@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import {
   downloadApplication,
@@ -15,10 +15,7 @@ const MyApplicationsPage = () => {
   const navigate = useNavigate();
 
   useEffect(() => {
-    const fetchApplications = async () => {
-      await dispatch(getMyApplications());
-    };
-    fetchApplications();
+    dispatch(getMyApplications());
   }, [dispatch]);
 
   if (loading)
@@ -32,83 +29,106 @@ const MyApplicationsPage = () => {
     );
 
   return (
-    <div className="max-w-5xl mx-auto p-6">
+    <div className="max-w-6xl mx-auto p-6">
       <h2 className="text-3xl font-bold mb-6">My Applications</h2>
 
       <div className="grid gap-6">
-        {applications.map((app) => (
-          <div
-            key={app._id}
-            className="border rounded-lg p-4 shadow bg-white flex flex-col md:flex-row justify-between items-start md:items-center"
-          >
-            <div>
+        {applications.map((app) => {
+          const job = app.jobPostId;
+          return (
+            <div
+              key={app._id}
+              className="border rounded-xl p-6 shadow-md bg-white hover:shadow-lg transition"
+            >
+              {/* Job Title & Location */}
+              <div className="flex flex-col md:flex-row md:items-center md:justify-between">
+                <div>
+                  <h3 className="text-xl font-semibold text-gray-800">
+                    {job?.title}
+                  </h3>
+                  <p className="text-gray-600">{job?.location}</p>
+                </div>
+
+                {/* Status */}
+                <span
+                  className={`mt-3 md:mt-0 inline-block px-3 py-1 rounded-full text-sm font-medium ${
+                    app.status === "Applied"
+                      ? "bg-blue-100 text-blue-700"
+                      : app.status === "Under Review"
+                      ? "bg-yellow-100 text-yellow-700"
+                      : app.status === "Shortlisted"
+                      ? "bg-green-100 text-green-700"
+                      : app.status === "Interview"
+                      ? "bg-purple-100 text-purple-700"
+                      : app.status === "Offered"
+                      ? "bg-teal-100 text-teal-700"
+                      : app.status === "Rejected"
+                      ? "bg-red-100 text-red-700"
+                      : "bg-gray-100 text-gray-700"
+                  }`}
+                >
+                  {app.status}
+                </span>
+              </div>
+
               {/* Job Details */}
-              <h3 className="text-xl font-semibold text-gray-800">
-                {app.jobPostId?.title}
-              </h3>
-              <p className="text-gray-600">{app.jobPostId?.location}</p>
+              <div className="mt-4 grid md:grid-cols-2 gap-3 text-sm text-gray-700">
+                <p>
+                  <span className="font-medium">Employment:</span>{" "}
+                  {job?.employmentType}
+                </p>
+                <p>
+                  <span className="font-medium">Experience:</span>{" "}
+                  {job?.experienceLevel}
+                </p>
+                <p>
+                  <span className="font-medium">Education:</span>{" "}
+                  {job?.educationRequired}
+                </p>
+                <p>
+                  <span className="font-medium">Work Schedule:</span>{" "}
+                  {job?.workSchedule}
+                </p>
+                <p>
+                  <span className="font-medium">Salary:</span>{" "}
+                  {job?.salaryRange
+                    ? `${job.salaryRange.min.toLocaleString()} - ${job.salaryRange.max.toLocaleString()} ${job.salaryRange.currency}`
+                    : "Not specified"}
+                </p>
+                <p>
+                  <span className="font-medium">Deadline:</span>{" "}
+                  {job?.deadline
+                    ? new Date(job.deadline).toLocaleDateString()
+                    : "N/A"}
+                </p>
+              </div>
 
-              {/* Status */}
-              <span
-                className={`inline-block mt-2 px-2 py-1 rounded text-sm font-medium ${
-                  app.status === "Applied"
-                    ? "bg-blue-100 text-blue-700"
-                    : app.status === "Under Review"
-                    ? "bg-yellow-100 text-yellow-700"
-                    : app.status === "Shortlisted"
-                    ? "bg-green-100 text-green-700"
-                    : app.status === "Interview"
-                    ? "bg-purple-100 text-purple-700"
-                    : app.status === "Offered"
-                    ? "bg-teal-100 text-teal-700"
-                    : app.status === "Rejected"
-                    ? "bg-red-100 text-red-700"
-                    : "bg-gray-100 text-gray-700"
-                }`}
-              >
-                {app.status}
-              </span>
-
-              {/* Resume & Cover Letter URLs */}
-              <div className="mt-3 space-x-4">
-                {/* <a
-                  href={app.resume}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="text-white bg-gray-800 hover:bg-gray-900 p-1 rounded px-2 shadow hover:shadow-2xl hover:underline"
-                >
-                  View Resume
-                </a> */}
-                {/* <a
-                  href={app.coverLetter}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="text-white bg-gray-800 hover:bg-gray-900 p-1 rounded px-2 shadow hover:shadow-2xl hover:underline"
-                >
-                  View Cover Letter
-                </a> */}
+              {/* Actions */}
+              <div className="mt-5 flex flex-wrap gap-3">
                 <Link
                   to={`/my-application/${app._id}`}
-                  className="text-white bg-gray-800 hover:bg-gray-900 p-1 rounded px-2 shadow hover:shadow-2xl hover:underline"
+                  className="text-white bg-gray-800 hover:bg-gray-900 px-3 py-1 rounded shadow"
                 >
                   View Application
                 </Link>
                 <button
-                  onClick={() => {
-                    dispatch(downloadApplication(app._id));
-                  }}
-                  className="text-white bg-gray-800 hover:bg-gray-900 p-1 rounded px-2 shadow hover:shadow-2xl "
+                  onClick={() => dispatch(downloadApplication(app._id))}
+                  className="text-white bg-gray-800 hover:bg-gray-900 px-3 py-1 rounded shadow"
                 >
                   Download Application
                 </button>
               </div>
-            </div>
 
-            <div className="mt-4 md:mt-0 text-sm text-gray-500">
-              Applied on {new Date(app.appliedAt).toLocaleDateString()}
+              {/* Footer */}
+              <p className="mt-4 text-xs text-gray-500">
+                Applied on{" "}
+                {app.appliedAt
+                  ? new Date(app.appliedAt).toLocaleDateString()
+                  : "N/A"}
+              </p>
             </div>
-          </div>
-        ))}
+          );
+        })}
       </div>
     </div>
   );

@@ -91,7 +91,7 @@ function EmployerProfileShow() {
     }
   };
   return (
-    <div className="max-w-6xl mx-auto px-6 mb-15 bg-gradient-to-b from-white to-gray-50 rounded-2xl shadow-xl">
+    <div className="max-w-6xl mx-auto mt-8 px-6 mb-15 bg-gradient-to-b from-white to-gray-50 rounded-2xl shadow-xl">
        {profile ? (
         <div className="space-y-10">
           {/* Header Section */}

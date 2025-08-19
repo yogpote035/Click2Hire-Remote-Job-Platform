@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { format } from "date-fns";
 import { useNavigate } from "react-router-dom";
-const JobForm = ({ onSubmit, initialData = {} }) => {
+const JobForm = ({ onSubmit, setShowForm, initialData = {} }) => {
   const [formData, setFormData] = useState({
     title: "",
     description: "",
@@ -399,7 +399,7 @@ const JobForm = ({ onSubmit, initialData = {} }) => {
       </button>
       <button
         type="button"
-        onClick={() => navigate(-1)}
+        onClick={() => (initialData.length ? navigate(-1) : setShowForm(false))}
         className="bg-red-600 text-white px-4 py-2 rounded mt-4"
       >
         {initialData && initialData._id

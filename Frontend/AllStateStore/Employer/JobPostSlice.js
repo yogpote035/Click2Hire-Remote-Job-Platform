@@ -81,6 +81,7 @@ export const createJobPosting = (jobData) => async (dispatch, getState) => {
     Swal.close();
     dispatch(requestSuccess(data.job));
     toast.success("Job posted successfully!");
+    dispatch(getMyJobs()); // refresh list
   } catch (error) {
     Swal.close();
     dispatch(requestFail(error.response?.data?.message || error.message));
@@ -91,7 +92,7 @@ export const createJobPosting = (jobData) => async (dispatch, getState) => {
 export const getMyJobs = () => async (dispatch, getState) => {
   dispatch(requestStart());
   Swal.fire({
-    title: "Wait!!, Fetching Your Jobs...",
+    title: "Wait!!, Searching Your Job Posts...",
     allowOutsideClick: false,
     didOpen: () => Swal.showLoading(),
   });
@@ -115,6 +116,11 @@ export const getMyJobs = () => async (dispatch, getState) => {
 // Fetch Single Job
 export const getJobById = (id) => async (dispatch, getState) => {
   dispatch(requestStart());
+  Swal.fire({
+    title: "Wait!!, Searching for job...",
+    allowOutsideClick: false,
+    didOpen: () => Swal.showLoading(),
+  });
   try {
     const token =
       getState().authentication.token || localStorage.getItem("token");
@@ -125,8 +131,10 @@ export const getJobById = (id) => async (dispatch, getState) => {
     );
 
     dispatch(requestSuccess(data));
+    Swal.close();
     dispatch(getMyJobs());
   } catch (error) {
+    Swal.close();
     dispatch(requestFail(error.response?.data?.message || error.message));
   }
 };
@@ -199,6 +207,12 @@ export const deleteJobPosting =
 export const closeJobPosting = (id) => async (dispatch, getState) => {
   dispatch(requestStart());
   try {
+    Swal.fire({
+      title: "Wait!!, Closing Your Job Post...",
+      text: "You don't Receive Any Application Further..",
+      allowOutsideClick: false,
+      didOpen: () => Swal.showLoading(),
+    });
     const token =
       getState().authentication.token || localStorage.getItem("token");
 
@@ -209,9 +223,11 @@ export const closeJobPosting = (id) => async (dispatch, getState) => {
     );
 
     dispatch(requestSuccess(data.job));
+    Swal.close();
     toast.success("Job closed successfully!");
     dispatch(getMyJobs());
   } catch (error) {
+    Swal.close();
     dispatch(requestFail(error.response?.data?.message || error.message));
   }
 };
@@ -220,6 +236,11 @@ export const closeJobPosting = (id) => async (dispatch, getState) => {
 export const getAllApplicationsForJob = (id) => async (dispatch, getState) => {
   dispatch(requestStart());
   try {
+    Swal.fire({
+      title: "Wait!!, Searching All Job Application...",
+      allowOutsideClick: false,
+      didOpen: () => Swal.showLoading(),
+    });
     const token =
       getState().authentication.token || localStorage.getItem("token");
 
@@ -231,7 +252,9 @@ export const getAllApplicationsForJob = (id) => async (dispatch, getState) => {
     );
 
     dispatch(allApplicationSuccess(data));
+    Swal.close();
   } catch (error) {
+    Swal.close();
     dispatch(requestFail(error.response?.data?.message || error.message));
   }
 };
@@ -239,6 +262,11 @@ export const getAllApplicationsForJob = (id) => async (dispatch, getState) => {
 export const getSingleApplicationForJob =
   (id, profileId) => async (dispatch, getState) => {
     dispatch(requestStart());
+    Swal.fire({
+      title: "Wait!!, Searching Job Application...",
+      allowOutsideClick: false,
+      didOpen: () => Swal.showLoading(),
+    });
     try {
       const token =
         getState().authentication.token || localStorage.getItem("token");
@@ -250,7 +278,9 @@ export const getSingleApplicationForJob =
         { headers: { Authorization: `Bearer ${token}` } }
       );
       dispatch(allApplicationSuccess(data));
+      Swal.close();
     } catch (error) {
+      Swal.close();
       dispatch(requestFail(error.response?.data?.message || error.message));
     }
   };

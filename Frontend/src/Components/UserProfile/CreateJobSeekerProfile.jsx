@@ -2,6 +2,8 @@ import React, { useEffect, useState } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import { useParams, useNavigate } from "react-router-dom";
 import Swal from "sweetalert2";
+import { ImCross } from "react-icons/im";
+
 import {
   createEmployeeProfile,
   updateEmployeeProfile,
@@ -447,10 +449,10 @@ export default function CreateJobSeekerProfile() {
           </button>
           <button
             type="button"
-            onClick={() => window.location.reload()}
+            onClick={() => navigate(-1)}
             className="px-4 py-2 bg-gray-200 rounded"
           >
-            Reset
+            Cancel
           </button>
         </div>
       </form>
@@ -580,7 +582,7 @@ function ChipEditor({ label, items = [], onAdd, onRemove, placeholder }) {
               onClick={() => onRemove(item)}
               className="text-red-600"
             >
-              ×
+              <ImCross size={15} />
             </button>
           </span>
         ))}

@@ -21,81 +21,94 @@ const SingleJobView = () => {
     return <p className="text-center mt-10 text-gray-500">Job not found.</p>;
 
   return (
-    <div className="max-w-4xl mx-auto p-6 mt-1 bg-white rounded-lg shadow-md">
-      <h1 className="text-3xl font-bold text-gray-800">{job.title}</h1>
-      <p className="text-gray-600 mt-2">{job.location}</p>
+    <div className="max-w-5xl mx-auto p-8 mt-6 mb-6 bg-white rounded-2xl shadow-lg border border-gray-100">
+      <div className="flex items-center gap-4 border-b pb-4 mb-6">
+        <img
+          src={job?.employerProfileId?.companyLogo}
+          alt="Logo"
+          className="h-14 w-14 rounded-full border border-gray-200"
+        />
+        <div>
+          <h2 className="text-2xl font-bold text-gray-800">
+            {job?.employerProfileId?.companyName}
+          </h2>
+          <p className="text-gray-500 text-sm">{job.location}</p>
+        </div>
+      </div>
 
-      <div className="mt-4 flex flex-wrap gap-2">
-        <span className="bg-blue-100 text-blue-800 px-2 py-1 rounded text-sm">
-          {job.employmentType}
-        </span>
-        <span className="bg-green-100 text-green-800 px-2 py-1 rounded text-sm">
-          {job.remoteOption}
-        </span>
-        <span
-          className={`px-2 py-1 rounded text-sm ${
-            job.status === "Open"
-              ? "bg-green-100 text-green-800"
-              : "bg-red-100 text-red-800"
-          }`}
-        >
-          {job.status}
-        </span>
-        {job.jobLevel && (
-          <span className="bg-gray-100 text-gray-800 px-2 py-1 rounded text-sm">
-            {job.jobLevel}
+      <div className="mb-6">
+        <h1 className="text-3xl font-extrabold text-gray-900">{job.title}</h1>
+        <div className="flex flex-wrap gap-2 mt-3">
+          <span className="bg-blue-100 text-blue-800 px-3 py-1 rounded-full text-sm font-medium">
+            {job.employmentType}
           </span>
-        )}
+          <span className="bg-green-100 text-green-800 px-3 py-1 rounded-full text-sm font-medium">
+            {job.remoteOption}
+          </span>
+          <span
+            className={`px-3 py-1 rounded-full text-sm font-medium ${
+              job.status === "Open"
+                ? "bg-green-100 text-green-800"
+                : "bg-red-100 text-red-800"
+            }`}
+          >
+            {job.status}
+          </span>
+          {job.jobLevel && (
+            <span className="bg-gray-100 text-gray-800 px-3 py-1 rounded-full text-sm font-medium">
+              {job.jobLevel}
+            </span>
+          )}
+        </div>
       </div>
 
       {job.status === "Closed" && (
-        <p className="mt-4 text-red-500 font-bold">
-          <strong className="text-indigo-400">Job is Closed:</strong> No Longer
-          Application Accepting
-        </p>
+        <div className="mb-6 p-3 rounded-lg bg-red-50 border border-red-200 text-red-700">
+          <strong className="text-red-800">Job Closed:</strong> No longer accepting applications
+        </div>
       )}
 
-      {job.skillsRequired?.length > 0 && (
-        <p className="mt-4 text-gray-700">
-          <strong>Skills Required:</strong> {job.skillsRequired.join(", ")}
-        </p>
-      )}
-
-      {job.salaryRange && (
-        <p className="mt-2 text-gray-700">
-          <strong>Salary:</strong> {job.salaryRange.min} - {job.salaryRange.max}{" "}
-          {job.salaryRange.currency}
-        </p>
-      )}
-
-      {job.experienceLevel && (
-        <p className="mt-2 text-gray-700">
-          <strong>Experience Level:</strong> {job.experienceLevel}
-        </p>
-      )}
-
-      {job.educationRequired && (
-        <p className="mt-2 text-gray-700">
-          <strong>Education Required:</strong> {job.educationRequired}
-        </p>
-      )}
-      {job.location && (
-        <p className="mt-2 text-gray-700">
-          <strong>Location:</strong> {job.location}
-        </p>
-      )}
+      <div className="grid md:grid-cols-2 gap-6 mb-8">
+        {job.skillsRequired?.length > 0 && (
+          <div>
+            <h3 className="font-semibold text-gray-800 mb-1">Skills Required</h3>
+            <p className="text-gray-600">{job.skillsRequired.join(", ")}</p>
+          </div>
+        )}
+        {job.salaryRange && (
+          <div>
+            <h3 className="font-semibold text-gray-800 mb-1">Salary</h3>
+            <p className="text-gray-600">
+              ₹{job.salaryRange.min.toLocaleString()} - ₹{job.salaryRange.max.toLocaleString()}{" "}
+              {job.salaryRange.currency}
+            </p>
+          </div>
+        )}
+        {job.experienceLevel && (
+          <div>
+            <h3 className="font-semibold text-gray-800 mb-1">Experience</h3>
+            <p className="text-gray-600">{job.experienceLevel}</p>
+          </div>
+        )}
+        {job.educationRequired && (
+          <div>
+            <h3 className="font-semibold text-gray-800 mb-1">Education</h3>
+            <p className="text-gray-600">{job.educationRequired}</p>
+          </div>
+        )}
+      </div>
 
       {job.description && (
-        <div className="mt-4 text-gray-700">
-          <h2 className="text-xl font-semibold mb-2">Job Description</h2>
-          <p>{job.description}</p>
+        <div className="mb-8">
+          <h2 className="text-xl font-bold text-gray-800 mb-2">Job Description</h2>
+          <p className="text-gray-700 leading-relaxed">{job.description}</p>
         </div>
       )}
 
       {job.benefits?.length > 0 && (
-        <div className="mt-4 text-gray-700">
-          <h2 className="text-xl font-semibold mb-2">Benefits</h2>
-          <ul className="list-disc list-inside">
+        <div className="mb-8">
+          <h2 className="text-xl font-bold text-gray-800 mb-2">Benefits</h2>
+          <ul className="list-disc list-inside text-gray-700 space-y-1">
             {job.benefits.map((b, index) => (
               <li key={index}>{b}</li>
             ))}
@@ -103,28 +116,27 @@ const SingleJobView = () => {
         </div>
       )}
 
-      <p className="mt-4 text-gray-500 text-sm">
-        <strong>Application Method:</strong> {job.applicationMethod}
-      </p>
+      <div className="flex flex-col md:flex-row md:items-center md:justify-between border-t pt-4">
+        <div className="text-sm text-gray-500">
+          <p>
+            <strong>Application Method:</strong> {job.applicationMethod}
+          </p>
+          <p className="mt-1">
+            <strong>Posted By:</strong> {job.postedBy} | <strong>Deadline:</strong>{" "}
+            {new Date(job.deadline).toLocaleDateString()}
+          </p>
+        </div>
 
-      <p className="mt-1 text-gray-400 text-sm">
-        <strong>Posted By:</strong> {job.postedBy} | <strong>Deadline:</strong>{" "}
-        {new Date(job.deadline).toLocaleDateString()}
-      </p>
-
-      {job.status !== "Closed" &&
-        localStorage.getItem("role") === "jobseeker" && (
-          <div className="flex justify-center mt-5">
+        {job.status !== "Closed" &&
+          localStorage.getItem("role") === "jobseeker" && (
             <button
-              onClick={() => {
-                navigate(`/apply-job/${job._id}`);
-              }}
-              className="bg-yellow-400 hover:bg-yellow-500 p-2 rounded-md px-4"
+              onClick={() => navigate(`/apply-job/${job._id}`)}
+              className="mt-4 md:mt-0 bg-indigo-600 hover:bg-indigo-700 text-white px-5 py-2 rounded-lg shadow-md transition"
             >
-              Apply This Job
+              Apply Now
             </button>
-          </div>
-        )}
+          )}
+      </div>
     </div>
   );
 };

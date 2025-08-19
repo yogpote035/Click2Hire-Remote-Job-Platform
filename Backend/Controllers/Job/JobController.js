@@ -10,7 +10,7 @@ exports.getAllJobs = async (req, res) => {
 
 exports.getJobById = async (req, res) => {
   try {
-    const job = await JobPostingModel.findById(req.params.id);
+    const job = await JobPostingModel.findById(req.params.id).populate("employerProfileId","companyName companyLogo");
     res.status(200).json({ success: true, job });
   } catch (error) {
     res.status(500).json({ success: false, message: error.message });

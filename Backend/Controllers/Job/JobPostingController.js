@@ -53,6 +53,8 @@ exports.getJobById = async (req, res) => {
       "companyName industry companyLogo"
     );
 
+    console.log("Job: ",job);
+
     if (!job) return res.status(404).json({ message: "Job not found" });
 
     res.json(job);
@@ -259,6 +261,7 @@ exports.SingleApplicationForJob = async (req, res) => {
   }
 };
 
+
 exports.SingleApplicationForJobUpdateStatusByEmployer = async (req, res) => {
   try {
     if (req.user.role !== "employer") {
@@ -300,12 +303,12 @@ exports.SingleApplicationForJobUpdateStatusByEmployer = async (req, res) => {
         .json({ success: false, message: "Application not found" });
     }
 
-
     if (application.userProfileId?.email) {
       const applicantEmail = application.userProfileId.email;
+      const applicantName = application.userProfileId.fullName;
       const companyName = employerProfile.companyName || "Our Company";
-      const jobTitle =
-        application.jobPostId?.title || "the job you applied for";
+      const companyLogo = employerProfile.companyLogo || "https://via.placeholder.com/120x60?text=Logo";
+      const jobTitle = application.jobPostId?.title || "the job you applied for";
 
       // setup mail transporter
       const transporter = nodemailer.createTransport({
@@ -317,16 +320,49 @@ exports.SingleApplicationForJobUpdateStatusByEmployer = async (req, res) => {
       });
 
       const mailOptions = {
-        from: `"${companyName}" <${process.env.SMTP_USER}>`,
+        from: `"${companyName}" <${process.env.Mail_User}>`,
         to: applicantEmail,
         subject: `Update on Your Job Application - ${jobTitle}`,
         html: `
-          <h2>Hello ${application?.userProfileId?.fullName},</h2>
-          <p>We wanted to inform you that your application status for <b>${jobTitle}</b> at <b>${companyName}</b> has been updated.</p>
-          <p><b>New Status:</b> ${status}</p>
-          <hr/>
-          <p>Best regards,</p>
-          <p><b>${companyName} Hiring Team</b></p>
+          <div style="font-family: Arial, sans-serif; padding: 20px; background: #f9f9f9;">
+            <div style="max-width: 600px; margin: auto; background: #fff; border-radius: 8px; overflow: hidden; border:1px solid #ddd;">
+              
+              <!-- Header -->
+              <div style="background: #0073e6; color: #fff; padding: 20px; display: flex; align-items: center; justify-content: space-between;">
+                <img src="${companyLogo}" alt="${companyName}" style="height:50px; border-radius:4px;" />
+                <h2 style="margin:0; font-size:20px;">${companyName}</h2>
+              </div>
+              
+              <!-- Body -->
+              <div style="padding: 20px; color:#333;">
+                <p>Dear <b>${applicantName}</b>,</p>
+                <p>We wanted to inform you that your application status for the position of 
+                  <b>${jobTitle}</b> at <b>${companyName}</b> has been updated.</p>
+
+                <p><b>New Status:</b> 
+                  <span style="color:#0073e6; font-weight:600;">${status}</span>
+                </p>
+
+                <h3 style="margin-top:20px; font-size:16px; border-bottom:1px solid #ddd; padding-bottom:5px;">Application Details</h3>
+                <p><b>Job Title:</b> ${jobTitle}</p>
+                <p><b>Applicant:</b> ${applicantName}</p>
+                <p><b>Email:</b> ${applicantEmail}</p>
+                <p><b>Applied On:</b> ${new Date(application.appliedAt).toDateString()}</p>
+
+                <hr style="margin:20px 0;" />
+
+                <p style="font-size:14px; color:#555;">If you have any questions, feel free to contact us at <a href="mailto:${process.env.Mail_User}" style="color:#0073e6;">${process.env.Mail_User}</a>.</p>
+                
+                <p style="margin-top:20px;">Best regards,</p>
+                <p><b>${companyName} Hiring Team</b></p>
+              </div>
+              
+              <!-- Footer -->
+              <div style="background:#f1f1f1; padding:10px 20px; font-size:12px; text-align:center; color:#777;">
+                © ${new Date().getFullYear()} ${companyName}. All Rights Reserved.
+              </div>
+            </div>
+          </div>
         `,
       };
 
@@ -348,3 +384,4 @@ exports.SingleApplicationForJobUpdateStatusByEmployer = async (req, res) => {
     res.status(500).json({ success: false, message: `Error, ${err?.message}` });
   }
 };
+

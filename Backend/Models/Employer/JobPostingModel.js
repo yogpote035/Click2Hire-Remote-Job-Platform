@@ -1,5 +1,6 @@
 // models/JobPosting.js
 const mongoose = require("mongoose");
+const JobApplicationModel = require("../Employee/JobApplicationModel");
 
 const jobPostingSchema = new mongoose.Schema(
   {
@@ -127,6 +128,20 @@ const jobPostingSchema = new mongoose.Schema(
   },
   { timestamps: true }
 );
+
+
+jobPostingSchema.pre("findOneAndDelete", async function (next) {
+  try {
+    const job = await this.model.findOne(this.getFilter()); // job being deleted
+    if (job) {
+      await JobApplicationModel.deleteMany({ jobPostId: job._id });
+      console.log(`Deleted all applications for job ${job._id}`);
+    }
+    next();
+  } catch (err) {
+    next(err);
+  }
+});
 
 const JobPostingModel = mongoose.model("JobPostingModel", jobPostingSchema);
 module.exports = JobPostingModel;

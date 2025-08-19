@@ -85,7 +85,7 @@ const SingleJobPostView = () => {
     return <p className="text-center mt-15 text-gray-500">Job not found.</p>;
 
   return (
-    <div className="max-w-4xl mx-auto mt-2 p-6 bg-white shadow-lg rounded-lg border border-gray-200">
+    <div className="max-w-4xl mx-auto mt-2 mb-3 p-6 bg-white shadow-lg rounded-lg border border-gray-200">
       {!editing ? (
         <>
           {/* Job Details */}

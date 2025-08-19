@@ -36,7 +36,7 @@ exports.applyForJob = async (req, res) => {
       jobPostId: jobPostId,
       userProfileId: profile,
     });
-   
+
     if (AppliedApplication?.length) {
       return res.status(400).json({
         message:
@@ -162,7 +162,16 @@ exports.downloadApplication = async (req, res) => {
       return res.status(404).json({ message: "Application not found" });
     }
 
-    // Choose puppeteer depending on environment
+    const jobId = application?.jobPostId?._id;
+    const findProfile = await JobPostingModel.findById(jobId).populate(
+      "employerProfileId",
+      "companyName companyLogo"
+    );
+
+    const imageUrl = findProfile?.employerProfileId?.companyLogo;
+    const companyName = findProfile?.employerProfileId?.companyName;
+
+    // Puppeteer setup
     if (process.env.NODE_ENV === "production") {
       puppeteer = require("puppeteer-core");
       const chromium = require("@sparticuz/chromium");
@@ -181,23 +190,112 @@ exports.downloadApplication = async (req, res) => {
 
     const page = await browser.newPage();
 
-    // Build HTML content dynamically
+    // --- Professional HTML Template ---
     const htmlContent = `
       <html>
         <head>
           <title>Job Application</title>
           <style>
-            body { font-family: Arial, sans-serif; padding: 20px; }
-            h1 { color: #333; }
-            h2 { margin-top: 20px; }
-            p { margin: 5px 0; }
-            .section { margin-bottom: 20px; }
-            .bold { font-weight: bold; }
+            body {
+              font-family: 'Segoe UI', Tahoma, sans-serif;
+              padding: 30px;
+              color: #333;
+              background: #f9f9f9;
+            }
+            .header {
+              display: flex;
+              align-items: center;
+              justify-content: space-between;
+              border-bottom: 2px solid #0073e6;
+              padding-bottom: 15px;
+              margin-bottom: 25px;
+            }
+            .header-left {
+              display: flex;
+              align-items: center;
+              gap: 15px;
+            }
+            .logo {
+              height: 60px;
+              width: auto;
+              border-radius: 8px;
+              object-fit: contain;
+              background: #fff;
+              padding: 4px;
+              border: 1px solid #ddd;
+            }
+            .company-name {
+              font-size: 22px;
+              font-weight: 600;
+              color: #0073e6;
+            }
+            h1 {
+              font-size: 24px;
+              color: #0073e6;
+              margin: 0;
+            }
+            h2 {
+              font-size: 18px;
+              margin: 20px 0 10px;
+              color: #444;
+              border-bottom: 1px solid #ddd;
+              padding-bottom: 5px;
+            }
+            .section {
+              background: #fff;
+              padding: 15px 20px;
+              border-radius: 8px;
+              margin-bottom: 20px;
+              box-shadow: 0 2px 5px rgba(0,0,0,0.05);
+            }
+            p {
+              margin: 5px 0;
+              line-height: 1.5;
+            }
+            .bold {
+              font-weight: 600;
+            }
+            a {
+              color: #0073e6;
+              text-decoration: none;
+            }
+            .skills, .languages, .benefits {
+              display: flex;
+              flex-wrap: wrap;
+              gap: 6px;
+            }
+            .tag {
+              background: #eaf4ff;
+              color: #0073e6;
+              padding: 4px 10px;
+              border-radius: 5px;
+              font-size: 13px;
+            }
+            .footer {
+              text-align: center;
+              margin-top: 40px;
+              padding-top: 15px;
+              border-top: 1px solid #ddd;
+              font-size: 12px;
+              color: #777;
+            }
           </style>
         </head>
         <body>
-          <h1>Job Application</h1>
+          <!-- Header -->
+          <div class="header">
+            <div class="header-left">
+              <img src="${
+                imageUrl || "https://via.placeholder.com/120x60?text=Logo"
+              }" class="logo" />
+              <div class="company-name">${
+                companyName || "Company Name"
+              }</div>
+            </div>
+            <h1>Job Application</h1>
+          </div>
 
+          <!-- Job Info -->
           <div class="section">
             <h2>Job Information</h2>
             <p><span class="bold">Title:</span> ${
@@ -212,11 +310,25 @@ exports.downloadApplication = async (req, res) => {
             <p><span class="bold">Employment Type:</span> ${
               application.jobPostId.employmentType
             }</p>
+            <p><span class="bold">Experience Level:</span> ${
+              application.jobPostId.experienceLevel
+            }</p>
+            <p><span class="bold">Salary Range:</span> ${
+              application.jobPostId.salaryRange.min
+            } - ${application.jobPostId.salaryRange.max} ${
+      application.jobPostId.salaryRange.currency
+    }</p>
             <p><span class="bold">Deadline:</span> ${new Date(
               application.jobPostId.deadline
             ).toDateString()}</p>
+            <div class="benefits">
+              ${application.jobPostId.benefits
+                .map((b) => `<span class="tag">${b}</span>`)
+                .join(" ")}
+            </div>
           </div>
 
+          <!-- Applicant Info -->
           <div class="section">
             <h2>Applicant Information</h2>
             <p><span class="bold">Name:</span> ${
@@ -234,11 +346,24 @@ exports.downloadApplication = async (req, res) => {
             <p><span class="bold">About:</span> ${
               application.userProfileId.about
             }</p>
-            <p><span class="bold">Skills:</span> ${application.userProfileId.skills.join(
-              ", "
-            )}</p>
+            <p><span class="bold">Expected Salary:</span> ${
+              application.userProfileId.expectedSalary
+            }</p>
+            <p><span class="bold">Skills:</span></p>
+            <div class="skills">
+              ${application.userProfileId.skills
+                .map((s) => `<span class="tag">${s}</span>`)
+                .join(" ")}
+            </div>
+            <p><span class="bold">Languages:</span></p>
+            <div class="languages">
+              ${application.userProfileId.languages
+                .map((l) => `<span class="tag">${l}</span>`)
+                .join(" ")}
+            </div>
           </div>
 
+          <!-- Application -->
           <div class="section">
             <h2>Application Details</h2>
             <p><span class="bold">Status:</span> ${application.status}</p>
@@ -251,6 +376,11 @@ exports.downloadApplication = async (req, res) => {
             <p><span class="bold">Cover Letter:</span> <a href="${
               application.coverLetter
             }">View Cover Letter</a></p>
+          </div>
+
+          <!-- Footer -->
+          <div class="footer">
+            © ${new Date().getFullYear()} ${companyName || "Company Name"} - Generated Job Application PDF
           </div>
         </body>
       </html>
