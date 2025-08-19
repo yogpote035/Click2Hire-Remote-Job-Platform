@@ -30,6 +30,39 @@ export default function SingleJobApplicationView() {
   const handleStatusChange = (newStatus) => {
     dispatch(ChangeApplicationStatus(application?._id, profileId, newStatus));
   };
+  // ✅ Define a fixed mapping of status to class names
+  const statusStyles = {
+    Applied: "bg-blue-200 text-blue-700 border border-blue-300",
+    "Under Review": "bg-purple-200 text-purple-700 border border-purple-300",
+    Shortlisted: "bg-green-200 text-green-700 border border-green-300",
+    Interview: "bg-yellow-200 text-yellow-700 border border-yellow-300",
+    Offered: "bg-orange-200 text-orange-700 border border-orange-300",
+    Rejected: "bg-red-200 text-red-700 border border-red-300",
+    Default: "bg-gray-200 text-gray-600 border border-gray-300",
+  };
+
+  const buttonStyles = {
+    "Under Review": {
+      active: "bg-purple-700",
+      inactive: "bg-purple-500 hover:bg-purple-600",
+    },
+    Shortlisted: {
+      active: "bg-green-700",
+      inactive: "bg-green-500 hover:bg-green-600",
+    },
+    Interview: {
+      active: "bg-yellow-700",
+      inactive: "bg-yellow-500 hover:bg-yellow-600",
+    },
+    Offered: {
+      active: "bg-orange-700",
+      inactive: "bg-orange-500 hover:bg-orange-600",
+    },
+    Rejected: {
+      active: "bg-red-700",
+      inactive: "bg-red-500 hover:bg-red-600",
+    },
+  };
 
   return (
     <div className="p-6 max-w-5xl mx-auto">
@@ -60,9 +93,7 @@ export default function SingleJobApplicationView() {
 
           {/* Job Info */}
           <div>
-            <h3 className="font-semibold text-lg text-gray-700">
-              Job Applied
-            </h3>
+            <h3 className="font-semibold text-lg text-gray-700">Job Applied</h3>
             <p className="text-gray-800">
               {application.jobPostId?.title || "N/A"}
             </p>
@@ -205,27 +236,16 @@ export default function SingleJobApplicationView() {
           </div>
 
           {/* Status */}
+          {/* Status */}
           <div>
             <h3 className="font-semibold text-lg text-gray-700">
               Application Status
             </h3>
+
             <p
-              className={`inline-block mt-2 px-4 py-2 text-sm font-medium rounded-full shadow-sm
-                ${
-                  application.status === "Applied"
-                    ? "bg-blue-200 text-blue-700 border border-blue-300"
-                    : application.status === "Under Review"
-                    ? "bg-purple-200 text-purple-700 border border-purple-300"
-                    : application.status === "Shortlisted"
-                    ? "bg-green-200 text-green-700 border border-green-300"
-                    : application.status === "Interview"
-                    ? "bg-yellow-200 text-yellow-700 border border-yellow-300"
-                    : application.status === "Offered"
-                    ? "bg-orange-200 text-orange-700 border border-orange-300"
-                    : application.status === "Rejected"
-                    ? "bg-red-200 text-red-700 border border-red-300"
-                    : "bg-gray-200 text-gray-600 border border-gray-300"
-                }`}
+              className={`inline-block mt-2 px-4 py-2 text-sm font-medium rounded-full shadow-sm ${
+                statusStyles[application.status] || statusStyles.Default
+              }`}
             >
               {application.status}
             </p>
@@ -235,24 +255,17 @@ export default function SingleJobApplicationView() {
             </h4>
 
             <div className="mt-4 grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 gap-4">
-              {[
-                { label: "Under Review", color: "purple" },
-                { label: "Shortlisted", color: "green" },
-                { label: "Interview", color: "yellow" },
-                { label: "Offered", color: "orange" },
-                { label: "Rejected", color: "red" },
-              ].map((status) => (
+              {Object.keys(buttonStyles).map((status) => (
                 <button
-                  key={status.label}
-                  onClick={() => handleStatusChange(status.label)}
-                  className={`px-4 py-2 rounded-lg text-white font-medium transition shadow-sm
-                    ${
-                      application.status === status.label
-                        ? `bg-${status.color}-700`
-                        : `bg-${status.color}-500 hover:bg-${status.color}-600`
-                    }`}
+                  key={status}
+                  onClick={() => handleStatusChange(status)}
+                  className={`px-4 py-2 rounded-lg text-white font-medium transition shadow-sm ${
+                    application.status === status
+                      ? buttonStyles[status].active
+                      : buttonStyles[status].inactive
+                  }`}
                 >
-                  {status.label}
+                  {status}
                 </button>
               ))}
             </div>
