@@ -213,18 +213,18 @@ export default function SingleJobApplicationView() {
               className={`inline-block mt-2 px-4 py-2 text-sm font-medium rounded-full shadow-sm
                 ${
                   application.status === "Applied"
-                    ? "bg-blue-100 text-blue-700 border border-blue-300"
+                    ? "bg-blue-200 text-blue-700 border border-blue-300"
                     : application.status === "Under Review"
-                    ? "bg-purple-100 text-purple-700 border border-purple-300"
+                    ? "bg-purple-200 text-purple-700 border border-purple-300"
                     : application.status === "Shortlisted"
-                    ? "bg-green-100 text-green-700 border border-green-300"
+                    ? "bg-green-200 text-green-700 border border-green-300"
                     : application.status === "Interview"
-                    ? "bg-yellow-100 text-yellow-700 border border-yellow-300"
+                    ? "bg-yellow-200 text-yellow-700 border border-yellow-300"
                     : application.status === "Offered"
-                    ? "bg-orange-100 text-orange-700 border border-orange-300"
+                    ? "bg-orange-200 text-orange-700 border border-orange-300"
                     : application.status === "Rejected"
-                    ? "bg-red-100 text-red-700 border border-red-300"
-                    : "bg-gray-100 text-gray-600 border border-gray-300"
+                    ? "bg-red-200 text-red-700 border border-red-300"
+                    : "bg-gray-200 text-gray-600 border border-gray-300"
                 }`}
             >
               {application.status}
