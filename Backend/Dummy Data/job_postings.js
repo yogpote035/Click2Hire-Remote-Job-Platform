@@ -6206,7 +6206,7 @@ const mongoose = require("mongoose");
 const JobPostingModel = require("../Models/Employer/JobPostingModel");
 
 // MongoDB connection
-const MONGO_URI = "mongodb+srv://click2hire2025:click2hire2025@cluster0.mkj8skh.mongodb.net/Click2Hire?retryWrites=true&w=majority&appName=Cluster0"; // change to your DB URI
+const MONGO_URI = "mouster0"; // change to your DB URI
 
 async function insertManyJobs() {
   try {
