@@ -35,10 +35,6 @@ function JobSeekerProfileShow() {
     );
   return (
     <div className="max-w-5xl mx-auto p-8 mt-3 bg-gradient-to-br from-gray-50 to-white rounded-2xl shadow-xl border border-gray-200">
-      <h1 className="text-blue-600 text-center font-extrabold text-4xl mb-10">
-        Job Seeker Profile
-      </h1>
-
       {jobseeker ? (
         <div className="space-y-8">
           {/* Header */}
@@ -52,7 +48,8 @@ function JobSeekerProfileShow() {
               <h2 className="text-3xl font-bold text-gray-800">
                 {jobseeker.fullName}
               </h2>
-              <div className="mt-2 space-y-1 text-gray-600">
+              {/* here change */}
+              <div className="mt-2 flex gap-2 space-y-1 text-gray-600">
                 <p className="flex items-center justify-center md:justify-start gap-2">
                   <Mail size={18} className="text-blue-500" /> {jobseeker.email}
                 </p>

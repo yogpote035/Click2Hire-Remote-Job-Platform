@@ -126,7 +126,7 @@ export const updateEmployeeProfile =
       dispatch(requestSuccess(data?.data));
       Swal.close();
       toast.success("Employee profile updated successfully!");
-      navigate("/");
+      navigate("/profile");
     } catch (error) {
       Swal.close();
       dispatch(requestFail(error.response?.data?.message || error.message));
