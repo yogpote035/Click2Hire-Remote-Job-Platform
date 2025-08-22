@@ -6,7 +6,7 @@ const jobPostingSchema = new mongoose.Schema(
   {
     employerProfileId: {
       type: mongoose.Schema.Types.ObjectId,
-      ref: "EmployerProfile",
+      ref: "EmployerProfileModel",
       required: true,
     },
     employerId: {

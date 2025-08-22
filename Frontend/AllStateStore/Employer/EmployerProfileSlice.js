@@ -29,7 +29,6 @@ const employerProfileSlice = createSlice({
     requestFail: (state, action) => {
       state.loading = false;
       state.error = action.payload;
-      toast.error(action.payload);
     },
     clearEmployer: (state) => {
       state.employer = null;
@@ -61,7 +60,10 @@ export const createEmployerProfile =
         `${import.meta.env.VITE_BACKEND_API}/profile/employer/`,
         profileData,
         {
-          headers: { Authorization: `Bearer ${token}` },
+          headers: {
+            Authorization: `Bearer ${token}`,
+            "Content-Type": "multipart/form-data",
+          },
         }
       );
       dispatch(requestSuccess(data?.data));
@@ -70,6 +72,7 @@ export const createEmployerProfile =
       Swal.close();
     } catch (error) {
       Swal.close();
+      toast.error(action.payload);
       dispatch(requestFail(error.response?.data?.message || error.message));
     }
   };
@@ -98,6 +101,7 @@ export const getEmployerProfile = (id) => async (dispatch, getState) => {
     dispatch(requestSuccess(data?.data));
   } catch (error) {
     Swal.close();
+    toast.error(action.payload);
     dispatch(requestFail(error.response?.data?.message || error.message));
   }
 };
@@ -121,7 +125,10 @@ export const updateEmployerProfile =
         `${import.meta.env.VITE_BACKEND_API}/profile/employer/${id}`,
         profileData,
         {
-          headers: { Authorization: `Bearer ${token}` },
+          headers: {
+            Authorization: `Bearer ${token}`,
+            "Content-Type": "multipart/form-data",
+          },
         }
       );
 
@@ -131,6 +138,7 @@ export const updateEmployerProfile =
       navigate("/profile");
     } catch (error) {
       Swal.close();
+      toast.error(action.payload);
       dispatch(requestFail(error.response?.data?.message || error.message));
     }
   };
@@ -166,6 +174,7 @@ export const deleteEmployerProfile =
         navigate("/");
       } catch (error) {
         Swal.close();
+        toast.error(action.payload);
         dispatch(requestFail(error.response?.data?.message || error.message));
       }
     }

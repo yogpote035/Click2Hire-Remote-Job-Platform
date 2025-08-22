@@ -145,20 +145,117 @@ module.exports.SentOtp = async (req, res) => {
         pass: process.env.Mail_Password, // your email password / app password
       },
     });
-
-    // Email content
     const mailOptions = {
-      from: `"Click2Hire" <${process.env.EMAIL_USER}>`,
-      to: email,
-      subject: "Your OTP Code",
-      html: `
-        <p>Hello ${user.fullName || "User"},</p>
-        <p>Your One Time Password (OTP) is:</p>
-        <h2>${otp}</h2>
-        <p>This OTP will expire in 5 minutes.</p>
-        <p>If you didn’t request this, please ignore this email.</p>
-      `,
-    };
+  from: `"Click2Hire" <${process.env.Mail_User}>`,
+  to: email,
+  subject: "🔑 Your OTP Code - C2H",
+  html: `
+  <!DOCTYPE html>
+  <html lang="en">
+   <head>
+     <meta charset="UTF-8" />
+     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+     <style>
+       body {
+         font-family: Arial, sans-serif;
+         background-color: #f9fafb;
+         margin: 0;
+         padding: 0;
+       }
+       .container {
+         max-width: 600px;
+         margin: 30px auto;
+         background: #ffffff;
+         border-radius: 10px;
+         overflow: hidden;
+         box-shadow: 0 6px 16px rgba(0,0,0,0.1);
+         border: 1px solid #e5e7eb;
+       }
+       .header {
+         background: linear-gradient(90deg, #1e3a8a, #f97316);
+         padding: 25px 20px;
+         text-align: center;
+         color: #fff;
+       }
+       .logo {
+         font-size: 42px;
+         font-weight: 700;
+         letter-spacing: 2px;
+         margin-bottom: 8px;
+       }
+       .logo .c, .logo .h {
+         color: #1e3a8a; /* Indigo */
+       }
+       .logo .two {
+         color: #f97316; /* Orange */
+       }
+       .header h1 {
+         margin: 5px 0 0 0;
+         font-size: 20px;
+         font-weight: 500;
+         color: #fff;
+       }
+       .content {
+         padding: 30px 25px;
+         text-align: center;
+         color: #374151;
+       }
+       .otp-box {
+         display: inline-block;
+         padding: 15px 30px;
+         margin: 25px 0;
+         border: 2px dashed #1e3a8a;
+         border-radius: 8px;
+         font-size: 26px;
+         font-weight: bold;
+         color: #f97316;
+         letter-spacing: 6px;
+         background: #f9fafb;
+       }
+       .footer {
+         background: #f3f4f6;
+         padding: 15px;
+         text-align: center;
+         font-size: 13px;
+         color: #6b7280;
+       }
+       a {
+         color: #f97316;
+         text-decoration: none;
+         font-weight: 600;
+       }
+     </style>
+   </head>
+   <body>
+     <div class="container">
+       <!-- Header -->
+       <div class="header">
+         <div class="logo">
+           <span class="c">C</span><span class="two">2</span><span class="h">H</span>
+         </div>
+         <h1>Security Verification</h1>
+       </div>
+
+       <!-- Content -->
+       <div class="content">
+         <p>Hello <strong>${user.fullName || "User"}</strong>,</p>
+         <p>We received a request to verify your account. Please use the OTP below to complete the process:</p>
+         <div class="otp-box">${otp}</div>
+         <p>This code will expire in <strong>5 minutes</strong>.</p>
+         <p>If you did not request this, you can safely ignore this email.</p>
+       </div>
+
+       <!-- Footer -->
+       <div class="footer">
+         <p>© 2025 C2H (Click2Hire). All rights reserved.</p>
+         <p><a href="https://click2-hire-remote-job-platform.vercel.app/">Visit our website</a></p>
+       </div>
+     </div>
+   </body>
+  </html>
+  `,
+};
+
 
     // Send email
     await transporter.sendMail(mailOptions);

@@ -60,7 +60,10 @@ export const createEmployeeProfile =
         `${import.meta.env.VITE_BACKEND_API}/profile/jobseeker`,
         profileData,
         {
-          headers: { Authorization: `Bearer ${token}` },
+          headers: {
+            Authorization: `Bearer ${token}`,
+            "Content-Type": "multipart/form-data",
+          },
         }
       );
       Swal.close();
@@ -120,7 +123,10 @@ export const updateEmployeeProfile =
         `${import.meta.env.VITE_BACKEND_API}/profile/jobseeker/${id}`,
         profileData,
         {
-          headers: { Authorization: `Bearer ${token}` },
+          headers: {
+            Authorization: `Bearer ${token}`,
+            "Content-Type": "multipart/form-data",
+          },
         }
       );
       dispatch(requestSuccess(data?.data));

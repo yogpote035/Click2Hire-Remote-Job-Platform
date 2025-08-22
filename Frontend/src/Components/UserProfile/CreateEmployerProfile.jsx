@@ -12,7 +12,8 @@ export default function CreateEmployerProfile() {
   const { id } = useParams();
   const navigate = useNavigate();
   const dispatch = useDispatch();
-
+  const [profilePreview, setProfilePreview] = useState();
+  const [profileFile, setProfileFile] = useState();
   const { loading, employer, error } = useSelector(
     (state) => state.employerProfile
   );
@@ -93,14 +94,52 @@ export default function CreateEmployerProfile() {
     updated.splice(index, 1);
     setForm((prev) => ({ ...prev, socialLinks: updated }));
   };
+  function objectToFormData(obj, form = new FormData(), namespace = "") {
+    for (let key in obj) {
+      if (obj.hasOwnProperty(key)) {
+        const value = obj[key];
+        const formKey = namespace ? `${namespace}[${key}]` : key;
 
+        if (value instanceof File) {
+          // File (profilePicture, resumeUrl)
+          form.append(formKey, value);
+        } else if (Array.isArray(value)) {
+          // Handle arrays
+          value.forEach((item, index) => {
+            if (typeof item === "object" && !(item instanceof File)) {
+              objectToFormData(item, form, `${formKey}[${index}]`);
+            } else {
+              form.append(`${formKey}[${index}]`, item);
+            }
+          });
+        } else if (typeof value === "object" && value !== null) {
+          // Nested objects
+          objectToFormData(value, form, formKey);
+        } else if (value !== undefined && value !== null) {
+          // Primitive values
+          form.append(formKey, value);
+        }
+      }
+    }
+    return form;
+  }
   const handleSubmit = async (e) => {
     e.preventDefault();
+    
+    const formData = objectToFormData(form);
+
+    // Append files
+    if (profileFile) formData.append("companyLogo", profileFile);
+    console.log("🔍 FormData entries:");
+    for (let [key, value] of formData.entries()) {
+      console.log(key, value);
+    }
+
     try {
       if (id) {
-        await dispatch(updateEmployerProfile(id, form, navigate));
+        await dispatch(updateEmployerProfile(id, formData, navigate));
       } else {
-        await dispatch(createEmployerProfile(form, navigate));
+        await dispatch(createEmployerProfile(formData, navigate));
       }
     } catch (err) {
       toast.error("Something went wrong");
@@ -157,6 +196,7 @@ export default function CreateEmployerProfile() {
             onChange={(v) => setField("industry", v)}
             required
           />
+
           <InputField
             label="Company Size"
             value={form.companySize}
@@ -177,12 +217,7 @@ export default function CreateEmployerProfile() {
             required
           />
 
-          {/* Logo + Active Jobs */}
-          <InputField
-            label="Company Logo (URL)"
-            value={form.companyLogo}
-            onChange={(v) => setField("companyLogo", v)}
-          />
+          {/*   Active Jobs */}
           <InputField
             label="Active Job Posts"
             value={form.activeJobPosts}
@@ -199,7 +234,55 @@ export default function CreateEmployerProfile() {
               required
             />
           </div>
+          {/* Logo + */}
+          <div className="mt-1 block w-full">
+            <label htmlFor="" className="text-sm block mb-1 text-gray-700">
+              Company Logo
+            </label>
+            <input
+              accept="image/*"
+              className="p-2 rounded border-1"
+              type="file"
+              required
+              onChange={(e) => {
+                const file = e.target.files[0];
+                setProfileFile(file); // store for upload
+                if (file) {
+                  setProfilePreview(URL.createObjectURL(file)); // preview locally
+                }
+              }}
+            />
+          </div>
+          {(profilePreview || form?.companyLogo) && (
+            <div className="flex justify-between border border-rose-200 rounded-2xl mt-2 p-2">
+              {profilePreview && (
+                <div className="p-2">
+                  <p className="block text-red-700 mb-2">New Logo For Upload</p>
+                  {profilePreview && (
+                    <img
+                      src={profilePreview}
+                      alt="New Profile Preview"
+                      className="h-50 w-60 object-cover rounded"
+                    />
+                  )}
+                </div>
+              )}
+              {form && form?.companyLogo?.url && (
+                <div className=" p-2">
+                  {/* Show existing Company Logo*/}
+                  <p className="block text-yellow-700 mb-2">
+                    Uploaded Company Logo
+                  </p>
 
+                  <img
+                    src={form?.companyLogo?.url}
+                    alt="Previous Company Logo"
+                    className="h-50 w-60 object-cover rounded"
+                  />
+                </div>
+              )}
+            </div>
+          )}
           {/* Social Links */}
           <div className="col-span-1 sm:col-span-2">
             <h3 className="font-semibold mb-3 text-gray-700">Social Links</h3>

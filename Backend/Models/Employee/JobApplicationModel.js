@@ -16,13 +16,21 @@ const jobApplicationSchema = new mongoose.Schema(
     },
 
     resume: {
-      type: String,
-      required: true,
+      url: {
+        type: String,
+      },
+      publicId: {
+        type: String,
+      },
     }, //think
 
     coverLetter: {
-      type: String,
-      required: true,
+      url: {
+        type: String,
+      },
+      publicId: {
+        type: String,
+      },
     }, //think
 
     status: {

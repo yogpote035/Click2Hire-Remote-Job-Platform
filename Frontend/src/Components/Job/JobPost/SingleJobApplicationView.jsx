@@ -74,7 +74,7 @@ export default function SingleJobApplicationView() {
           {/* Header */}
           <div className="flex items-center gap-6">
             <img
-              src={profile.profilePicture}
+              src={profile.profilePicture?.url}
               alt={profile.fullName}
               className="w-28 h-28 rounded-full object-cover border-4 border-indigo-200"
             />
@@ -218,7 +218,7 @@ export default function SingleJobApplicationView() {
           {/* Resume & Cover Letter */}
           <div className="flex gap-6">
             <a
-              href={application?.resume}
+              href={application?.resume?.url}
               target="_blank"
               rel="noreferrer"
               className="text-indigo-600 hover:underline"
@@ -226,7 +226,7 @@ export default function SingleJobApplicationView() {
               View Resume
             </a>
             <a
-              href={application?.coverLetter}
+              href={application?.coverLetter?.url}
               target="_blank"
               rel="noreferrer"
               className="text-indigo-600 hover:underline"

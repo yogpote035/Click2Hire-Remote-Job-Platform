@@ -77,7 +77,12 @@ export const applyForJob =
       const { data } = await axios.post(
         `${import.meta.env.VITE_BACKEND_API}/jobseeker/apply-job/apply`,
         formData,
-        { headers: { Authorization: `Bearer ${token}` } }
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+            // "Content-Type": "multipart/form-data",
+          },
+        }
       );
 
       Swal.close();
@@ -191,7 +196,7 @@ export const downloadApplication = (id) => async (dispatch, getState) => {
       `${import.meta.env.VITE_BACKEND_API}/jobseeker/apply-job/${id}/download`,
       {
         headers: { Authorization: `Bearer ${token}` },
-        responseType: "blob", 
+        responseType: "blob",
       }
     );
 

@@ -53,7 +53,7 @@ exports.getJobById = async (req, res) => {
       "companyName industry companyLogo"
     );
 
-    console.log("Job: ",job);
+    console.log("Job: ", job);
 
     if (!job) return res.status(404).json({ message: "Job not found" });
 
@@ -261,7 +261,6 @@ exports.SingleApplicationForJob = async (req, res) => {
   }
 };
 
-
 exports.SingleApplicationForJobUpdateStatusByEmployer = async (req, res) => {
   try {
     if (req.user.role !== "employer") {
@@ -307,8 +306,11 @@ exports.SingleApplicationForJobUpdateStatusByEmployer = async (req, res) => {
       const applicantEmail = application.userProfileId.email;
       const applicantName = application.userProfileId.fullName;
       const companyName = employerProfile.companyName || "Our Company";
-      const companyLogo = employerProfile.companyLogo || "https://via.placeholder.com/120x60?text=Logo";
-      const jobTitle = application.jobPostId?.title || "the job you applied for";
+      const companyLogo =
+        employerProfile.companyLogo?.url ||
+        "https://via.placeholder.com/120x60?text=Logo";
+      const jobTitle =
+        application.jobPostId?.title || "the job you applied for";
 
       // setup mail transporter
       const transporter = nodemailer.createTransport({
@@ -319,51 +321,107 @@ exports.SingleApplicationForJobUpdateStatusByEmployer = async (req, res) => {
         },
       });
 
+      const statusColors = {
+        Accepted: "#28a745",
+        Rejected: "#dc3545",
+        "Under Review": "#ff9800",
+        "In Progress": "#0073e6",
+      };
       const mailOptions = {
         from: `"${companyName}" <${process.env.Mail_User}>`,
         to: applicantEmail,
-        subject: `Update on Your Job Application - ${jobTitle}`,
+        subject: `Application Status Update – ${jobTitle}`,
         html: `
-          <div style="font-family: Arial, sans-serif; padding: 20px; background: #f9f9f9;">
-            <div style="max-width: 600px; margin: auto; background: #fff; border-radius: 8px; overflow: hidden; border:1px solid #ddd;">
-              
-              <!-- Header -->
-              <div style="background: #0073e6; color: #fff; padding: 20px; display: flex; align-items: center; justify-content: space-between;">
-                <img src="${companyLogo}" alt="${companyName}" style="height:50px; border-radius:4px;" />
-                <h2 style="margin:0; font-size:20px;">${companyName}</h2>
-              </div>
-              
-              <!-- Body -->
-              <div style="padding: 20px; color:#333;">
-                <p>Dear <b>${applicantName}</b>,</p>
-                <p>We wanted to inform you that your application status for the position of 
-                  <b>${jobTitle}</b> at <b>${companyName}</b> has been updated.</p>
+  <div style="font-family: 'Segoe UI', Arial, sans-serif; background:#f4f6f9; padding:30px;">
+    <div style="max-width:650px; margin:auto; background:#fff; border-radius:10px; overflow:hidden; box-shadow:0 4px 12px rgba(0,0,0,0.08); border:1px solid #e0e0e0;">
+      
+      <!-- Header -->
+      <div style="background:linear-gradient(90deg, #1e3a8a, #f97316); padding:25px; text-align:center; color:#fff;">
+        <!-- Inline Logo -->
+        <div style="font-size:38px; font-weight:700; letter-spacing:2px; margin-bottom:8px;">
+          <span style="color:#1e3a8a;">C</span>
+          <span style="color:#f97316;">2</span>
+          <span style="color:#1e3a8a;">H</span>
+        </div>
+        <h1 style="margin:0; font-size:22px; font-weight:500;">${companyName}</h1>
+      </div>
+      
+      <!-- Body -->
+      <div style="padding:30px; color:#333; line-height:1.6;">
+        <p style="font-size:16px;">Dear <b>${applicantName}</b>,</p>
+        <p>Your application status for <b>${jobTitle}</b> has been updated:</p>
+        
+        <!-- Status Badge -->
+        <div style="margin:20px 0; text-align:center;">
+          <span style="background:${
+            statusColors[status] || "#0073e6"
+          }; color:#fff; padding:10px 20px; border-radius:50px; font-size:16px; font-weight:bold;">
+            ${status}
+          </span>
+        </div>
+        
+        <!-- Job Card -->
+        <div style="background:#fafafa; padding:20px; border-radius:8px; border:1px solid #eee; margin-bottom:20px;">
+          <h3 style="margin-top:0; color:#1e3a8a;">📌 Job Details</h3>
+          <p><b>Title:</b> ${jobTitle}</p>
+          <p><b>Location:</b> ${application.jobPostId.location}</p>
+          <p><b>Type:</b> ${application.jobPostId.employmentType}</p>
+          <p><b>Salary:</b> ${application.jobPostId.salaryRange.min} - ${
+          application.jobPostId.salaryRange.max
+        } ${application.jobPostId.salaryRange.currency}</p>
+          <p><b>Perks:</b> ${application.jobPostId.companyPerks.join(", ")}</p>
+        </div>
 
-                <p><b>New Status:</b> 
-                  <span style="color:#0073e6; font-weight:600;">${status}</span>
-                </p>
-
-                <h3 style="margin-top:20px; font-size:16px; border-bottom:1px solid #ddd; padding-bottom:5px;">Application Details</h3>
-                <p><b>Job Title:</b> ${jobTitle}</p>
-                <p><b>Applicant:</b> ${applicantName}</p>
-                <p><b>Email:</b> ${applicantEmail}</p>
-                <p><b>Applied On:</b> ${new Date(application.appliedAt).toDateString()}</p>
-
-                <hr style="margin:20px 0;" />
-
-                <p style="font-size:14px; color:#555;">If you have any questions, feel free to contact us at <a href="mailto:${process.env.Mail_User}" style="color:#0073e6;">${process.env.Mail_User}</a>.</p>
-                
-                <p style="margin-top:20px;">Best regards,</p>
-                <p><b>${companyName} Hiring Team</b></p>
-              </div>
-              
-              <!-- Footer -->
-              <div style="background:#f1f1f1; padding:10px 20px; font-size:12px; text-align:center; color:#777;">
-                © ${new Date().getFullYear()} ${companyName}. All Rights Reserved.
-              </div>
-            </div>
+        <!-- Applicant Card -->
+        <div style="background:#eef6ff; padding:20px; border-radius:8px; border:1px solid #d0e2ff; margin-bottom:20px;">
+          <h3 style="margin-top:0; color:#005bb5;">👤 Your Profile</h3>
+          <p><b>Name:</b> ${applicantName}</p>
+          <p><b>Email:</b> ${applicantEmail}</p>
+          <p><b>Portfolio:</b> <a href="${
+            application.userProfileId.portfolioUrl
+          }" target="_blank" style="color:#0073e6;">${
+          application.userProfileId.portfolioUrl
+        }</a></p>
+          <p><b>Resume:</b> <a href="${
+            application.userProfileId.resumeUrl.url
+          }" target="_blank" style="color:#0073e6;">📄 Download Resume</a></p>
+          
+          <!-- Skills Section -->
+          <div style="margin-top:10px;">
+            <b>Skills:</b><br/>
+            ${application.userProfileId.skills
+              .map(
+                (skill) => `
+              <span style="display:inline-block; background:#1e3a8a; color:#fff; padding:6px 12px; border-radius:20px; font-size:13px; margin:5px;">${skill}</span>
+            `
+              )
+              .join("")}
           </div>
-        `,
+        </div>
+
+        <!-- CTA Buttons -->
+        <div style="text-align:center; margin:30px 0;">
+          <a href="${
+            application.userProfileId.linkedinProfile
+          }" target="_blank" style="background:#0073e6; color:#fff; padding:12px 25px; border-radius:30px; text-decoration:none; font-size:15px; font-weight:bold; margin:5px;">View LinkedIn</a>
+          <a href="${
+            application.userProfileId.githubProfile
+          }" target="_blank" style="background:#24292e; color:#fff; padding:12px 25px; border-radius:30px; text-decoration:none; font-size:15px; font-weight:bold; margin:5px;">View GitHub</a>
+        </div>
+        
+        <p>If you have questions, reach us at <a href="mailto:${
+          process.env.Mail_User
+        }" style="color:#0073e6;">${process.env.Mail_User}</a>.</p>
+        <p>Best regards,<br><b>${companyName} Hiring Team</b></p>
+      </div>
+      
+      <!-- Footer -->
+      <div style="background:#f1f1f1; padding:15px; font-size:12px; text-align:center; color:#777;">
+        © ${new Date().getFullYear()} ${companyName}. All Rights Reserved.
+      </div>
+    </div>
+  </div>
+  `,
       };
 
       // send mail
@@ -384,4 +442,3 @@ exports.SingleApplicationForJobUpdateStatusByEmployer = async (req, res) => {
     res.status(500).json({ success: false, message: `Error, ${err?.message}` });
   }
 };
-

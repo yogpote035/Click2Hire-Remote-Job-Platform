@@ -1,19 +1,30 @@
 // controllers/jobApplicationController.js
 const JobApplicationModel = require("../../Models/Employee/JobApplicationModel");
 const JobPostingModel = require("../../Models/Employer/JobPostingModel");
-const JobSeekerProfileModel = require("../../Models/Employee/EmployeeProfileModel");
+const JobSeekerProfileModel = require("../../Models/Employee/JobSeekerProfileModel");
 
 exports.applyForJob = async (req, res) => {
   try {
+    console.log("Request in apply job: ");
+    console.log("Request body: ", req.body);
     if (req.user.role !== "jobseeker") {
       return res.status(401).json({ message: "Only jobseekers can apply" });
     }
 
     // If applied  then not accept second application
 
-    const { jobPostId, resume, coverLetter } = req.body;
-    if (!jobPostId || !resume) {
-      return res.status(400).json({ message: "Job and Resume are required" });
+    let { jobPostId, resume, coverLetter } = req.body;
+
+    // if present in req.body
+    if (resume) {
+      resume.url = resume;
+    }
+    if (coverLetter) {
+      coverLetter.url = coverLetter;
+    }
+
+    if (!jobPostId) {
+      return res.status(400).json({ message: "Job Id is required" });
     }
 
     const profile = await JobSeekerProfileModel.findOne({
@@ -42,6 +53,28 @@ exports.applyForJob = async (req, res) => {
         message:
           "Your Application for This Job Already Exists, You Can Edit or Delete Application",
       });
+    }
+
+    if (req?.uploadResults?.resume) {
+      resume = {
+        url: req.uploadResults.resume.url,
+        publicId: req.uploadResults.resume.publicId,
+      };
+    }
+    if (req?.uploadResults?.coverLetter) {
+      coverLetter = {
+        url: req.uploadResults.coverLetter.url,
+        publicId: req.uploadResults.coverLetter.publicId,
+      };
+    }
+    console.log("profile obj: ", resume);
+    console.log("--------");
+    console.log("resume obj: ", coverLetter);
+    console.log("--------");
+    if (!resume || !coverLetter) {
+      return res
+        .status(400)
+        .json({ message: "Resume And Cover Letter is Required!!" });
     }
     const application = new JobApplicationModel({
       jobPostId,
@@ -168,7 +201,7 @@ exports.downloadApplication = async (req, res) => {
       "companyName companyLogo"
     );
 
-    const imageUrl = findProfile?.employerProfileId?.companyLogo;
+    const imageUrl = findProfile?.employerProfileId?.companyLogo?.url;
     const companyName = findProfile?.employerProfileId?.companyName;
 
     // Puppeteer setup
@@ -288,9 +321,7 @@ exports.downloadApplication = async (req, res) => {
               <img src="${
                 imageUrl || "https://via.placeholder.com/120x60?text=Logo"
               }" class="logo" />
-              <div class="company-name">${
-                companyName || "Company Name"
-              }</div>
+              <div class="company-name">${companyName || "Company Name"}</div>
             </div>
             <h1>Job Application</h1>
           </div>
@@ -380,7 +411,9 @@ exports.downloadApplication = async (req, res) => {
 
           <!-- Footer -->
           <div class="footer">
-            © ${new Date().getFullYear()} ${companyName || "Company Name"} - Generated Job Application PDF
+            © ${new Date().getFullYear()} ${
+      companyName || "Company Name"
+    } - Generated Job Application PDF
           </div>
         </body>
       </html>

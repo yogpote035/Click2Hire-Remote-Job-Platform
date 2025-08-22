@@ -24,7 +24,7 @@ const SingleJobView = () => {
     <div className="max-w-5xl mx-auto p-8 mt-6 mb-6 bg-white rounded-2xl shadow-lg border border-gray-100">
       <div className="flex items-center gap-4 border-b pb-4 mb-6">
         <img
-          src={job?.employerProfileId?.companyLogo}
+          src={job?.employerProfileId?.companyLogo?.url}
           alt="Logo"
           className="h-14 w-14 rounded-full border border-gray-200"
         />

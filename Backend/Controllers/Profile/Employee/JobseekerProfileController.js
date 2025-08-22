@@ -1,4 +1,4 @@
-const EmployeeProfileModel = require("../../../Models/Employee/EmployeeProfileModel");
+const EmployeeProfileModel = require("../../../Models/Employee/JobSeekerProfileModel");
 
 // Create new profile
 exports.createProfile = async (req, res) => {
@@ -28,7 +28,32 @@ exports.createProfile = async (req, res) => {
       });
     }
 
-    const profile = new EmployeeProfileModel({ ...req.body, userId });
+    // merge uploadResults into body
+    const profileData = {
+      ...req.body,
+      userId,
+    };
+
+    if (req?.uploadResults?.profilePicture) {
+      profileData.profilePicture = {
+        url: req?.uploadResults?.profilePicture?.url,
+        publicId: req?.uploadResults?.profilePicture?.publicId,
+      };
+    }
+
+    if (req?.uploadResults?.resumeUrl) {
+      profileData.resumeUrl = {
+        url: req.uploadResults.resumeUrl.url,
+        publicId: req.uploadResults.resumeUrl.publicId,
+      };
+    }
+    console.log("profile obj: ", profileData.profilePicture);
+    console.log("------++++++++++++********////++++++++------------");
+    console.log("resume obj: ", profileData.resumeUrl);
+    console.log("------------------------------++++++++------------");
+    console.log("profile data before add: ", profileData);
+
+    const profile = new EmployeeProfileModel(profileData);
     await profile.save();
 
     res.status(201).json({
@@ -37,6 +62,7 @@ exports.createProfile = async (req, res) => {
       data: profile,
     });
   } catch (error) {
+    console.error(error);
     res.status(400).json({
       success: false,
       message: "Error creating profile",
@@ -108,9 +134,31 @@ exports.updateProfile = async (req, res) => {
         .json({ success: false, message: "Profile not found" });
     }
 
+    const profileData = {
+      ...req.body,
+    };
+
+    if (req?.uploadResults?.profilePicture) {
+      profileData.profilePicture = {
+        url: req?.uploadResults?.profilePicture?.url,
+        publicId: req?.uploadResults?.profilePicture?.publicId,
+      };
+    }
+
+    if (req?.uploadResults?.resumeUrl) {
+      profileData.resumeUrl = {
+        url: req.uploadResults.resumeUrl.url,
+        publicId: req.uploadResults.resumeUrl.publicId,
+      };
+    }
+    console.log("profile obj: ", profileData.profilePicture);
+    console.log("------++++++++++++********////++++++++------------");
+    console.log("resume obj: ", profileData.resumeUrl);
+    console.log("------------------------------++++++++------------");
+
     const updatedProfile = await EmployeeProfileModel.findOneAndUpdate(
       { userId },
-      req.body,
+      profileData,
       { new: true, runValidators: true }
     );
 

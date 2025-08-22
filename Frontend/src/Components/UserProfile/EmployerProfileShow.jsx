@@ -92,12 +92,12 @@ function EmployerProfileShow() {
   };
   return (
     <div className="max-w-6xl mx-auto mt-8 px-6 mb-15 bg-gradient-to-b from-white to-gray-50 rounded-2xl shadow-xl">
-       {profile ? (
+      {profile ? (
         <div className="space-y-10">
           {/* Header Section */}
           <div className="flex flex-col md:flex-row items-center gap-8">
             <img
-              src={profile?.companyLogo}
+              src={profile?.companyLogo?.url}
               alt={profile?.companyName}
               className="w-32 h-32 rounded-full border-4 border-indigo-200 shadow-md object-cover"
             />
@@ -238,7 +238,7 @@ function EmployerProfileShow() {
           </div>
         </div>
       ) : (
-        <div className="text-center mt-8">
+        <div className="text-center mt-8 mb-8 py-10">
           <p className="mb-4 text-gray-500 text-lg">
             No employer profile found.
           </p>

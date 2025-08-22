@@ -3,9 +3,20 @@ const express = require("express");
 const router = express.Router();
 const jobApplicationController = require("../../Controllers/Job/JobApplyingController");
 const VerifyToken = require("../../Middleware/VerifyToken");
+const cloudinaryUploadMiddleware = require("../../Middleware/cloudinaryUploadMiddleware");
+const upload = require("../../Middleware/upload");
 
 // Apply for a job
-router.post("/apply", VerifyToken, jobApplicationController.applyForJob);
+router.post(
+  "/apply",
+  upload.fields([
+    { name: "resume", maxCount: 1 }, // updated field name for both upload
+    { name: "coverLetter", maxCount: 1 }, // updated field name for both upload
+  ]),
+  cloudinaryUploadMiddleware,
+  VerifyToken,
+  jobApplicationController.applyForJob
+);
 
 // Get all applications of logged-in jobseeker
 router.get(

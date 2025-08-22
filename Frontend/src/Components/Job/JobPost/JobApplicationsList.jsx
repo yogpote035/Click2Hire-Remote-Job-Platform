@@ -76,7 +76,7 @@ export default function JobApplicationsList() {
 
               <div className="mt-3 flex gap-4">
                 <a
-                  href={app?.resume}
+                  href={app?.resume?.url}
                   target="_blank"
                   rel="noreferrer"
                   className="text-blue-600 hover:underline"
@@ -84,7 +84,7 @@ export default function JobApplicationsList() {
                   View Resume
                 </a>
                 <a
-                  href={app?.coverLetter}
+                  href={app?.coverLetter?.url}
                   target="_blank"
                   rel="noreferrer"
                   className="text-blue-600 hover:underline"

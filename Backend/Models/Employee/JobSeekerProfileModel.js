@@ -9,28 +9,33 @@ const EmployeeProfileSchema = new mongoose.Schema(
     fullName: {
       type: String,
       required: true,
-    }, //done
+    },
     email: {
       type: String,
       required: true,
-    }, //done
+    },
     mobileNumber: {
       type: String,
       required: true,
-    }, //done
+    },
     profilePicture: {
-      type: String,
-      default:
-        "https://img.freepik.com/premium-vector/man-avatar-profile-picture-vector-illustration_268834-538.jpg",
-    }, //done
+      url: {
+        type: String,
+        required: true,
+      },
+      publicId: {
+        type: String,
+        required: true,
+      },
+    },
     skills: {
       type: [String],
       default: [],
-    }, //done
+    },
     experience: {
       type: String,
       default: "No experience listed",
-    }, //done
+    },
     projects: {
       type: [
         {
@@ -61,7 +66,7 @@ const EmployeeProfileSchema = new mongoose.Schema(
         },
       ],
       default: [],
-    }, //done
+    },
     education: {
       type: [
         {
@@ -76,48 +81,54 @@ const EmployeeProfileSchema = new mongoose.Schema(
     certifications: {
       type: [String],
       default: [],
-    }, //customized
+    },
     languages: {
       type: [String],
       default: [],
-    }, //customized
+    },
     linkedinProfile: {
       type: String,
       default: "Not Provided",
-    }, //Customized
+    },
     githubProfile: {
       type: String,
       default: "Not Provided",
-    }, //done
+    },
     location: {
       type: String,
       default: "Not specified",
-    }, //done
+    },
     about: {
       type: String,
       default: "No information provided",
-    }, //done
+    },
     resumeUrl: {
-      type: String,
-      default: "Not Provided",
-    }, //done
+      url: {
+        type: String,
+        required: true,
+      },
+      publicId: {
+        type: String,
+        required: true,
+      },
+    },
     role: {
       type: String,
       default: "jobseeker",
       required: true,
-    }, //customized
+    },
     portfolioUrl: {
       type: String,
       default: "Not Provided",
-    }, //done
+    },
     jobPreferences: {
       type: String,
       default: "Not specified",
-    }, //customized
+    },
     availability: {
       type: String,
       default: "Available",
-    }, //customized
+    },
     expectedSalary: {
       type: Number,
       default: 0,

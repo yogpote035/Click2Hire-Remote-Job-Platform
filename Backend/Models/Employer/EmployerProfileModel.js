@@ -29,9 +29,14 @@ const EmployerProfileSchema = new mongoose.Schema(
     },
 
     companyLogo: {
-      type: String,
-      default:
-        "https://img.freepik.com/premium-vector/company-icon-simple-element-illustration-company-concept-symbol-design-can-be-used-web-mobile_159242-7784.jpg",
+      url: {
+        type: String,
+        required: true,
+      },
+      publicId: {
+        type: String,
+        required: true,
+      },
     },
 
     companyWebsite: {
@@ -113,7 +118,7 @@ const EmployerProfileSchema = new mongoose.Schema(
 );
 
 const EmployerProfileModel = mongoose.model(
-  "EmployerProfile",
+  "EmployerProfileModel",
   EmployerProfileSchema
 );
 

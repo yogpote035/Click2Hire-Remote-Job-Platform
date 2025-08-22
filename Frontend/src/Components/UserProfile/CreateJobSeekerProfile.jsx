@@ -19,6 +19,9 @@ export default function CreateJobSeekerProfile() {
   const { loading, error, jobseeker } = useSelector(
     (state) => state.jobseekerProfile
   );
+  const [profileFile, setProfileFile] = useState(null);
+  const [resumeFile, setResumeFile] = useState(null);
+  const [profilePreview, setProfilePreview] = useState(null);
 
   const [saving, setSaving] = useState(false);
   const [form, setForm] = useState({
@@ -26,8 +29,7 @@ export default function CreateJobSeekerProfile() {
     fullName: "",
     email: "",
     mobileNumber: "",
-    profilePicture:
-      "https://img.freepik.com/premium-vector/man-avatar-profile-picture-vector-illustration_268834-538.jpg",
+    profilePicture: "",
     skills: [],
     experience: "",
     projects: [],
@@ -140,6 +142,36 @@ export default function CreateJobSeekerProfile() {
       return { ...prev, education: next };
     });
 
+  // Append form fields
+  function objectToFormData(obj, form = new FormData(), namespace = "") {
+    for (let key in obj) {
+      if (obj.hasOwnProperty(key)) {
+        const value = obj[key];
+        const formKey = namespace ? `${namespace}[${key}]` : key;
+
+        if (value instanceof File) {
+          // File (profilePicture, resumeUrl)
+          form.append(formKey, value);
+        } else if (Array.isArray(value)) {
+          // Handle arrays
+          value.forEach((item, index) => {
+            if (typeof item === "object" && !(item instanceof File)) {
+              objectToFormData(item, form, `${formKey}[${index}]`);
+            } else {
+              form.append(`${formKey}[${index}]`, item);
+            }
+          });
+        } else if (typeof value === "object" && value !== null) {
+          // Nested objects
+          objectToFormData(value, form, formKey);
+        } else if (value !== undefined && value !== null) {
+          // Primitive values
+          form.append(formKey, value);
+        }
+      }
+    }
+    return form;
+  }
   const handleSubmit = async (e) => {
     e.preventDefault();
     setSaving(true);
@@ -150,13 +182,23 @@ export default function CreateJobSeekerProfile() {
     }
 
     try {
+      // Convert object to FormData
+      const formData = objectToFormData(form);
+
+      // Append files
+      if (profileFile) formData.append("profilePicture", profileFile);
+      if (resumeFile) formData.append("resumeUrl", resumeFile);
+
       if (id) {
-        await dispatch(updateEmployeeProfile(id, form, navigate));
+        console.log("Updating employee profile...");
+        await dispatch(updateEmployeeProfile(id, formData, navigate));
       } else {
-        await dispatch(createEmployeeProfile(form, navigate));
+        console.log("Creating employee profile...");
+        await dispatch(createEmployeeProfile(formData, navigate));
       }
     } catch (err) {
       console.error(err);
+      toast.error("Something went wrong.");
     } finally {
       setSaving(false);
     }
@@ -230,13 +272,57 @@ export default function CreateJobSeekerProfile() {
               value={form.portfolioUrl}
               onChange={(v) => setField("portfolioUrl", v)}
             />
-            <TextInput
-              required
-              label="Profile Picture URL"
-              value={form.profilePicture}
-              onChange={(v) => setField("profilePicture", v)}
-            />
+            <div className="mt-1 grid">
+              <label htmlFor="" className="text-sm block mb-1 text-gray-700">
+                Profile Picture
+              </label>
+              <input
+                accept="image/*"
+                className="p-2 rounded border-1"
+                type="file"
+                onChange={(e) => {
+                  const file = e.target.files[0];
+                  setProfileFile(file); // store for upload
+                  if (file) {
+                    setProfilePreview(URL.createObjectURL(file)); // preview locally
+                  }
+                }}
+              />
+              {/* Preview new image if selected */}
+            </div>
           </Grid>
+          {(profilePreview || jobseeker?.profilePicture) && (
+            <div className="flex justify-between border border-rose-200 rounded-2xl mt-2 p-2">
+              {profilePreview && (
+                <div className="p-2">
+                  <p className="block text-red-700 mb-2">
+                    New Image For Upload
+                  </p>
+                  {profilePreview && (
+                    <img
+                      src={profilePreview}
+                      alt="New Profile Preview"
+                      className="h-50 w-60 object-cover rounded"
+                    />
+                  )}
+                </div>
+              )}
+              {jobseeker && jobseeker?.profilePicture?.url && (
+                <div className=" p-2">
+                  {/* Show existing profile picture */}
+                  <p className="block text-yellow-700 mb-2">
+                    Uploaded Profile Image
+                  </p>
+
+                  <img
+                    src={jobseeker.profilePicture.url}
+                    alt="Previous Profile Picture"
+                    className="h-50 w-60 object-cover rounded"
+                  />
+                </div>
+              )}
+            </div>
+          )}
         </Section>
 
         <Section title="About & Preferences">
@@ -266,15 +352,38 @@ export default function CreateJobSeekerProfile() {
               onChange={(v) => setField("expectedSalary", v)}
               required
             />
+            <div className="mt-1">
+              <label htmlFor="" className="text-sm text-gray-700">
+                Select Resume
+                <span className="text-red-400">PDF/DOC/DOCX</span>
+              </label>
+              <input
+                accept=".pdf,.doc,.docx"
+                type="file"
+                className="p-2 rounded border-1"
+                onChange={(e) => setResumeFile(e.target.files[0])}
+              />
+              {jobseeker && jobseeker?.resumeUrl?.url && (
+                <a
+                  href={`${jobseeker?.resumeUrl?.url}`}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="block text-indigo-500 hover:underline font-light hover:font-normal"
+                >
+                  View Existing Resume
+                </a>
+              )}{" "}
+            </div>
           </Grid>
-          <Grid>
-            <TextInput
+          {/* remove letter */}
+          {/* <Grid>
+            {/* <TextInput
               required
               label="Resume URL"
               value={form.resumeUrl}
               onChange={(v) => setField("resumeUrl", v)}
-            />
-          </Grid>
+              /> */}
+          {/* </Grid> */}
         </Section>
 
         <Section title="Skills, Languages & Certifications">
@@ -359,7 +468,7 @@ export default function CreateJobSeekerProfile() {
           <button
             type="button"
             onClick={addProject}
-            className="px-3 py-2 rounded bg-black text-white text-sm mb-3"
+            className="px-3 py-2 rounded bg-black hover:bg-gray-800 text-white text-sm mb-3"
           >
             + Add Project
           </button>
@@ -483,22 +592,24 @@ function TextInput({ label, value, onChange, type = "text" }) {
         type={type}
         value={value || ""}
         onChange={(e) => onChange(e.target.value)}
-        className="mt-1 w-full border rounded px-3 py-2"
+        className="mt-1 w-full border rounded px-3 py-2 focus:outline-none outline-none"
       />
     </label>
   );
 }
 
-function NumberInput({ label, value, onChange, min = 0 }) {
+function NumberInput({ label, value, onChange, min }) {
+  //here update min salary number
   return (
     <label className="block">
       <span className="text-sm text-gray-700">{label}</span>
       <input
         type="number"
-        value={value ?? 0}
+        value={value}
         onChange={(e) => onChange(Number(e.target.value))}
         min={min}
-        className="mt-1 w-full border rounded px-3 py-2"
+        required
+        className="mt-1 w-full border rounded px-3 py-2 focus:outline-none outline-none"
       />
     </label>
   );
@@ -512,7 +623,7 @@ function TextArea({ label, value, onChange, rows = 3 }) {
         rows={rows}
         value={value || ""}
         onChange={(e) => onChange(e.target.value)}
-        className="mt-1 w-full border rounded px-3 py-2"
+        className="mt-1 w-full border rounded px-3 py-2 focus:outline-none outline-none"
       />
     </label>
   );
@@ -525,7 +636,7 @@ function Select({ label, value, options = [], onChange }) {
       <select
         value={value}
         onChange={(e) => onChange(e.target.value)}
-        className="mt-1 w-full border rounded px-3 py-2"
+        className="mt-1 w-full border rounded px-3 py-2 focus:outline-none outline-none "
       >
         {options.map((opt) => (
           <option key={opt} value={opt}>
@@ -553,19 +664,21 @@ function ChipEditor({ label, items = [], onAdd, onRemove, placeholder }) {
   };
   return (
     <div className="mb-3">
-      <span className="block text-sm text-gray-700 mb-1">{label}</span>
+      <span className="block text-sm text-gray-700 mb-1  focus:outline-none outline-none">
+        {label}
+      </span>
       <div className="flex gap-2 mb-2">
         <input
           value={val}
           onChange={(e) => setVal(e.target.value)}
           onKeyDown={onKeyDown}
           placeholder={placeholder}
-          className="flex-1 border rounded px-3 py-2"
+          className="flex-1 border rounded px-3 py-2   focus:outline-none outline-none"
         />
         <button
           type="button"
           onClick={handleAdd}
-          className="px-3 py-2 bg-black text-white rounded text-sm"
+          className="px-3 py-2 bg-black hover:bg-gray-800 text-white rounded text-sm"
         >
           Add
         </button>
@@ -580,7 +693,7 @@ function ChipEditor({ label, items = [], onAdd, onRemove, placeholder }) {
             <button
               type="button"
               onClick={() => onRemove(item)}
-              className="text-red-600"
+              className="text-red-600 hover:text-gray-900"
             >
               <ImCross size={15} />
             </button>

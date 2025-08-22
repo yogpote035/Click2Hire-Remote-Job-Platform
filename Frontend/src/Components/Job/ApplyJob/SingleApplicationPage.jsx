@@ -6,6 +6,7 @@ import {
   deleteApplication,
   downloadApplication,
 } from "../../../../AllStateStore/JobSeeker/JobApplicationSlice";
+import { Download, X } from "lucide-react";
 
 const SingleApplicationPage = () => {
   const { id } = useParams(); // applicationId from URL
@@ -83,7 +84,7 @@ const SingleApplicationPage = () => {
         </h3>
         <div className="flex items-center gap-5 mb-4 p-4 bg-gray-50 rounded-xl">
           <img
-            src={application.userProfileId?.profilePicture}
+            src={application.userProfileId?.profilePicture?.url}
             alt="Profile"
             className="w-20 h-20 rounded-full object-cover shadow"
           />
@@ -125,7 +126,7 @@ const SingleApplicationPage = () => {
         <h3 className="text-lg font-semibold mb-3 text-gray-800">Documents</h3>
         <div className="space-y-2">
           <a
-            href={application.resume}
+            href={application.resume?.url}
             target="_blank"
             rel="noopener noreferrer"
             className="inline-block text-blue-600 hover:underline"
@@ -134,7 +135,7 @@ const SingleApplicationPage = () => {
           </a>
           <br />
           <a
-            href={application.coverLetter}
+            href={application.coverLetter?.url}
             target="_blank"
             rel="noopener noreferrer"
             className="inline-block text-blue-600 hover:underline"
@@ -148,10 +149,12 @@ const SingleApplicationPage = () => {
             onClick={() => {
               dispatch(downloadApplication(application._id));
             }}
-            className="bg-orange-500 hover:bg-orange-600 transition px-5 py-2 rounded-lg text-white font-medium shadow"
+            className="flex items-center gap-2 bg-orange-500 hover:bg-orange-600 active:scale-95 transition px-5 py-2 rounded-lg text-white font-medium shadow"
+            aria-label="Download Application"
           >
-            ⬇️ Download Application
+            <Download size={20} /> Download Application
           </button>
+
           <button
             onClick={() => {
               dispatch(
@@ -162,9 +165,10 @@ const SingleApplicationPage = () => {
                 )
               );
             }}
-            className="bg-red-500 hover:bg-red-600 transition px-5 py-2 rounded-lg text-white font-medium shadow"
+            className="flex items-center gap-2 bg-red-500 hover:bg-red-600 active:scale-95 transition px-5 py-2 rounded-lg text-white font-medium shadow"
+            aria-label="Withdraw Application"
           >
-            ❌ Withdraw Application
+            <X size={20} /> Withdraw Application
           </button>
         </div>
       </div>

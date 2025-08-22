@@ -18,7 +18,7 @@ exports.createEmployerProfile = async (req, res) => {
     });
   }
   try {
-    const {
+    let {
       companyName,
       email,
       mobileNumber,
@@ -75,6 +75,14 @@ exports.createEmployerProfile = async (req, res) => {
         message: "Profile already exists, you can edit or delete it",
       });
     }
+
+    if (req?.uploadResults?.companyLogo) {
+      companyLogo = {
+        url: req?.uploadResults?.companyLogo?.url,
+        publicId: req?.uploadResults?.companyLogo?.publicId,
+      };
+    }
+    console.log("Company Logo: ", companyLogo);
 
     const profile = await EmployerProfileModel.create({
       userId,
@@ -171,7 +179,7 @@ exports.updateEmployerProfile = async (req, res) => {
     });
   }
   try {
-    const updates = req.body;
+    let updates = req.body;
 
     if (updates.email && !isValidEmail(updates.email)) {
       return res.status(400).json({ message: "Invalid email address" });
@@ -194,6 +202,16 @@ exports.updateEmployerProfile = async (req, res) => {
         }
       }
     }
+
+   
+    if (req?.uploadResults?.companyLogo) {
+      updates.companyLogo = {
+        url: req?.uploadResults?.companyLogo?.url,
+        publicId: req?.uploadResults?.companyLogo?.publicId,
+      };
+    }
+
+    console.log("Company Logo: ", updates?.companyLogo);
 
     const profile = await EmployerProfileModel.findOneAndUpdate(
       { userId: req?.params?.id || req?.user?.userId },

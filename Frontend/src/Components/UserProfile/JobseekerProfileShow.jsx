@@ -33,14 +33,15 @@ function JobSeekerProfileShow() {
         <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-blue-600"></div>
       </div>
     );
+
   return (
-    <div className="max-w-5xl mx-auto p-8 mt-3 bg-gradient-to-br from-gray-50 to-white rounded-2xl shadow-xl border border-gray-200">
+    <div className="max-w-5xl mx-auto p-8 mt-3 mb-3 bg-gradient-to-br from-gray-50 to-white rounded-2xl shadow-xl border border-gray-200">
       {jobseeker ? (
         <div className="space-y-8">
           {/* Header */}
           <div className="flex flex-col md:flex-row items-center gap-8 border-b pb-6">
             <img
-              src={jobseeker.profilePicture || "/default-avatar.png"}
+              src={jobseeker.profilePicture?.url || "/default-avatar.png"}
               alt={jobseeker.fullName}
               className="w-40 h-40 object-cover rounded-full shadow-lg border-4 border-blue-200"
             />
@@ -49,19 +50,21 @@ function JobSeekerProfileShow() {
                 {jobseeker.fullName}
               </h2>
               {/* here change */}
-              <div className="mt-2 flex gap-2 space-y-1 text-gray-600">
-                <p className="flex items-center justify-center md:justify-start gap-2">
-                  <Mail size={18} className="text-blue-500" /> {jobseeker.email}
+              <div className="mt-2 space-y-2 text-gray-600">
+                <p className="flex items-center gap-2">
+                  <Mail size={18} className="text-blue-500" />
+                  <span className="truncate">{jobseeker.email}</span>
                 </p>
-                <p className="flex items-center justify-center md:justify-start gap-2">
-                  <Phone size={18} className="text-blue-500" />{" "}
-                  {jobseeker.mobileNumber}
+                <p className="flex items-center gap-2">
+                  <Phone size={18} className="text-blue-500" />
+                  <span className="truncate">{jobseeker.mobileNumber}</span>
                 </p>
-                <p className="flex items-center justify-center md:justify-start gap-2">
-                  <MapPin size={18} className="text-blue-500" />{" "}
-                  {jobseeker.location}
+                <p className="flex items-center gap-2">
+                  <MapPin size={18} className="text-blue-500" />
+                  <span className="truncate">{jobseeker.location}</span>
                 </p>
               </div>
+
               <p className="mt-4 text-sm bg-blue-50 inline-block px-4 py-1 rounded-full text-blue-600 font-medium">
                 Availability: {jobseeker.availability}
               </p>
@@ -143,7 +146,7 @@ function JobSeekerProfileShow() {
                 {jobseeker.projects.map((pr, i) => (
                   <li
                     key={i}
-                    className="bg-gray-50 p-5 rounded-lg border hover:shadow-md transition"
+                    className="bg-gray-50 p-5 rounded-lg border border-gray-700 hover:shadow-md transition"
                   >
                     <p className="font-bold text-lg text-gray-800">
                       {pr.title}
