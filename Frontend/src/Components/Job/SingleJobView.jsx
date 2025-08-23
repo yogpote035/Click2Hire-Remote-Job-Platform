@@ -64,23 +64,61 @@ const SingleJobView = () => {
 
       {job.status === "Closed" && (
         <div className="mb-6 p-3 rounded-lg bg-red-50 border border-red-200 text-red-700">
-          <strong className="text-red-800">Job Closed:</strong> No longer accepting applications
+          <strong className="text-red-800">Job Closed:</strong> No longer
+          accepting applications
         </div>
       )}
 
       <div className="grid md:grid-cols-2 gap-6 mb-8">
         {job.skillsRequired?.length > 0 && (
           <div>
-            <h3 className="font-semibold text-gray-800 mb-1">Skills Required</h3>
-            <p className="text-gray-600">{job.skillsRequired.join(", ")}</p>
+            <h3 className="font-semibold text-gray-800 mb-2">
+              Skills Required
+            </h3>
+            <div className="flex flex-wrap gap-2">
+              {job.skillsRequired.map((skill, i) => {
+                const isMatched = job.matchedSkills?.includes(skill);
+                return (
+                  <span
+                    key={i}
+                    className={`px-3 py-1 rounded-full text-sm font-medium ${
+                      isMatched
+                        ? "bg-green-100 text-green-700 border border-green-300"
+                        : "bg-gray-100 text-gray-700 border border-gray-200"
+                    }`}
+                  >
+                    {skill}
+                  </span>
+                );
+              })}
+            </div>
+
+            {/*  Show count/percentage */}
+            {job.matchCount !== undefined && (
+              <p className="mt-2 text-sm text-gray-600">
+                <strong>{job.matchCount}</strong> / {job.skillsRequired.length}{" "}
+                skills matched
+                {job.skillsRequired.length > 0 && (
+                  <>
+                    {" "}
+                    (
+                    {Math.round(
+                      (job.matchCount / job.skillsRequired.length) * 100
+                    )}
+                    % match)
+                  </>
+                )}
+              </p>
+            )}
           </div>
         )}
+
         {job.salaryRange && (
           <div>
             <h3 className="font-semibold text-gray-800 mb-1">Salary</h3>
             <p className="text-gray-600">
-              ₹{job.salaryRange.min.toLocaleString()} - ₹{job.salaryRange.max.toLocaleString()}{" "}
-              {job.salaryRange.currency}
+              ₹{job.salaryRange.min.toLocaleString()} - ₹
+              {job.salaryRange.max.toLocaleString()} {job.salaryRange.currency}
             </p>
           </div>
         )}
@@ -100,7 +138,9 @@ const SingleJobView = () => {
 
       {job.description && (
         <div className="mb-8">
-          <h2 className="text-xl font-bold text-gray-800 mb-2">Job Description</h2>
+          <h2 className="text-xl font-bold text-gray-800 mb-2">
+            Job Description
+          </h2>
           <p className="text-gray-700 leading-relaxed">{job.description}</p>
         </div>
       )}
@@ -122,7 +162,8 @@ const SingleJobView = () => {
             <strong>Application Method:</strong> {job.applicationMethod}
           </p>
           <p className="mt-1">
-            <strong>Posted By:</strong> {job.postedBy} | <strong>Deadline:</strong>{" "}
+            <strong>Posted By:</strong> {job.postedBy} |{" "}
+            <strong>Deadline:</strong>{" "}
             {new Date(job.deadline).toLocaleDateString()}
           </p>
         </div>

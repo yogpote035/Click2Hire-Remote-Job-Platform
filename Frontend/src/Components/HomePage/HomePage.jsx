@@ -1,8 +1,40 @@
-import React from "react";
-import { Link } from "react-router-dom";
+import React, { useState } from "react";
+import toast from "react-hot-toast";
+import { useSelector } from "react-redux";
+import { Link, useNavigate } from "react-router-dom";
 
 const HomePage = () => {
-  const role = "jobseeker"; // Replace with Redux state later
+  const role =
+    useSelector((state) => state.authentication.role) ||
+    localStorage.getItem("role"); // Replace with Redux state later
+  const navigate = useNavigate();
+
+  // search states
+  const [query, setQuery] = useState("");
+  const [location, setLocation] = useState("");
+
+  const handleSearch = () => {
+    if (!query && !location) {
+      toast.error("Please enter a skill/title or location", {
+        style: {
+          border: "1px solid #713200",
+          padding: "16px",
+          color: "#713200",
+        },
+        iconTheme: {
+          primary: "#713200",
+          secondary: "#FFFAEE",
+        },
+      });
+      return;
+    }
+
+    const params = new URLSearchParams();
+    if (query) params.append("query", query);
+    if (location) params.append("location", location);
+
+    navigate(`/job/search?${params.toString()}`);
+  };
 
   return (
     <div className="min-h-screen bg-gray-50 text-gray-800 font-inter">
@@ -25,14 +57,22 @@ const HomePage = () => {
             <input
               type="text"
               placeholder="Job title or skill"
+              value={query}
+              onChange={(e) => setQuery(e.target.value)}
               className="px-4 py-2 rounded-lg border w-full sm:w-64 focus:outline-none shadow-sm"
             />
             <input
               type="text"
               placeholder="Location"
+              value={location}
+              onChange={(e) => setLocation(e.target.value)}
               className="px-4 py-2 rounded-lg border w-full sm:w-64 focus:outline-none shadow-sm"
             />
-            <button className="bg-blue-600 text-white px-6 py-2 rounded-lg hover:bg-blue-700 transition">
+            <button
+              onClick={handleSearch}
+              type="submit"
+              className="bg-blue-600 text-white px-6 py-2 rounded-lg hover:bg-blue-700 transition"
+            >
               Search
             </button>
           </div>

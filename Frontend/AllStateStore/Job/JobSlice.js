@@ -105,3 +105,45 @@ export const getSingleJob = (id) => async (dispatch, getState) => {
     dispatch(requestFail(error.response?.data?.message || error.message));
   }
 };
+
+// Get Single Application
+export const SearchJobs = (query, location) => async (dispatch, getState) => {
+  console.log("In Search Slice : ");
+  dispatch(requestStart());
+  if (!query && !location) {
+    console.log("Query form slice: ", query);
+    console.log("location form slice: ", location);
+    return toast.error("Please enter a skill/title or location", {
+      style: {
+        border: "1px solid #713200",
+        padding: "16px",
+        color: "#713200",
+      },
+      iconTheme: {
+        primary: "#713200",
+        secondary: "#FFFAEE",
+      },
+    });
+  }
+  try {
+    Swal.fire({
+      title: `Searching Jobs for ${query ? query + " " : ""}${
+        location ? "in " + location : ""
+      }...`,
+      allowOutsideClick: false,
+      didOpen: () => Swal.showLoading(),
+    });
+
+    const { data } = await axios.get(
+      `${import.meta.env.VITE_BACKEND_API}/job/search-job`,
+      {
+        params: { query, location },
+      }
+    );
+    dispatch(requestMultipleSuccess(data.jobs));
+    Swal.close();
+  } catch (error) {
+    Swal.close();
+    dispatch(requestFail(error.response?.data?.message || error.message));
+  }
+};

@@ -22,7 +22,7 @@ const AllJobsForSeeker = () => {
   return (
     <div className="max-w-7xl mx-auto p-6">
       <h2 className="text-3xl font-bold mb-6 text-gray-900">
-        Explore Opportunities
+        Explore Jobs Based on Your Profile
       </h2>
 
       <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
@@ -60,7 +60,7 @@ const AllJobsForSeeker = () => {
               )}
             </div>
 
-            {/* Skills */}
+            {/* Skills Required */}
             {job.skillsRequired?.length > 0 && (
               <div className="mt-3 flex flex-wrap gap-2">
                 {job.skillsRequired.slice(0, 4).map((skill, i) => (
@@ -76,6 +76,73 @@ const AllJobsForSeeker = () => {
                     +{job.skillsRequired.length - 4} more
                   </span>
                 )}
+              </div>
+            )}
+
+            {/* Profession / Job Details */}
+            <div className="mt-4 flex flex-wrap gap-2 text-xs">
+              {job.experienceLevel && (
+                <span className="bg-gray-100 text-gray-700 px-2 py-1 rounded-full">
+                  {job.experienceLevel} Experience
+                </span>
+              )}
+              {job.jobLevel && (
+                <span className="bg-gray-100 text-gray-700 px-2 py-1 rounded-full">
+                  {job.jobLevel}
+                </span>
+              )}
+              {job.educationRequired && (
+                <span className="bg-gray-100 text-gray-700 px-2 py-1 rounded-full">
+                  {job.educationRequired}
+                </span>
+              )}
+              {job.workSchedule && (
+                <span className="bg-gray-100 text-gray-700 px-2 py-1 rounded-full">
+                  {job.workSchedule}
+                </span>
+              )}
+            </div>
+
+            {/* Benefits */}
+            {job.benefits?.length > 0 && (
+              <div className="mt-3 flex flex-wrap gap-2">
+                {job.benefits.slice(0, 3).map((benefit, i) => (
+                  <span
+                    key={i}
+                    className="bg-green-50 text-green-700 px-2 py-1 rounded-full text-xs"
+                  >
+                    {benefit}
+                  </span>
+                ))}
+                {job.benefits.length > 3 && (
+                  <span className="text-xs text-gray-500">
+                    +{job.benefits.length - 3} more
+                  </span>
+                )}
+              </div>
+            )}
+
+            {/* Matched Skills */}
+            {job?.matchedSkills?.length > 0 && (
+              <div className="mt-3">
+                <h4 className="text-xs text-gray-500 mb-1 font-medium">
+                  Your Matched Skills:
+                </h4>
+                <div className="flex flex-wrap gap-2">
+                  {job.matchedSkills.slice(0, 4).map((skill, i) => (
+                    <span
+                      key={i}
+                      className="bg-yellow-50 text-yellow-700 px-2 py-1 rounded-full text-xs font-medium"
+                    >
+                      {skill}
+                    </span>
+                  ))}
+                  {job.matchedSkills.length > 4 && (
+                    <span className="text-xs text-gray-500">
+                      +{job.matchedSkills.length - 4} more
+                    </span>
+                  )}
+                </div>
               </div>
             )}
 

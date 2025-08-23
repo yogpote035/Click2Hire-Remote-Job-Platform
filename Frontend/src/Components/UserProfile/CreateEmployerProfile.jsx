@@ -125,15 +125,15 @@ export default function CreateEmployerProfile() {
   }
   const handleSubmit = async (e) => {
     e.preventDefault();
-    
+
     const formData = objectToFormData(form);
 
     // Append files
     if (profileFile) formData.append("companyLogo", profileFile);
-    console.log("🔍 FormData entries:");
-    for (let [key, value] of formData.entries()) {
-      console.log(key, value);
-    }
+    // console.log("🔍 FormData entries:");
+    // for (let [key, value] of formData.entries()) {
+    //   console.log(key, value);
+    // }
 
     try {
       if (id) {
@@ -243,7 +243,7 @@ export default function CreateEmployerProfile() {
               accept="image/*"
               className="p-2 rounded border-1"
               type="file"
-              required
+              required={!id}
               onChange={(e) => {
                 const file = e.target.files[0];
                 setProfileFile(file); // store for upload

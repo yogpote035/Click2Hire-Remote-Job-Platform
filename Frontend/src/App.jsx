@@ -22,6 +22,7 @@ import SingleApplicationPage from "./Components/Job/ApplyJob/SingleApplicationPa
 import SingleJobPostView from "./Components/Job/JobPost/SingleJobPostView";
 import JobApplicationsList from "./Components/Job/JobPost/JobApplicationsList";
 import SingleJobApplicationView from "./Components/Job/JobPost/SingleJobApplicationView";
+import ShowSearchedJobs from "./Components/Job/ShowSearchedJobs";
 function App() {
   const role =
     useSelector((state) => state.authentication.role) ||
@@ -86,8 +87,23 @@ function App() {
             }
           />
           {/* Job Route Show And ... */}
-          <Route path="/jobs" element={<AllJobsForSeeker />} />
-          <Route path="/job/:id" element={<SingleJobView />} />
+          <Route
+            path="/jobs"
+            element={
+              <ProtectedRoutes>
+                <AllJobsForSeeker />
+              </ProtectedRoutes>
+            }
+          />
+          <Route
+            path="/job/:id"
+            element={
+              <ProtectedRoutes>
+                <SingleJobView />
+              </ProtectedRoutes>
+            }
+          />
+          <Route path="/job/search" element={<ShowSearchedJobs />} />
           {/* Apply Job Routes */}
           <Route
             path="/apply-job/:id"
