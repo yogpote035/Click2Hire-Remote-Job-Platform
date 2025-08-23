@@ -110,11 +110,6 @@ export default authenticationSlice.reducer;
 
 export const loginEmailPassword =
   (email, password, navigate) => async (dispatch, getState) => {
-    const { loading } = getState().authentication;
-    if (loading) {
-      toast.error("Already processing a request. Please wait.");
-      return;
-    }
     dispatch(loginRequest());
 
     Swal.fire({
@@ -163,11 +158,6 @@ export const loginEmailPassword =
 
 export const loginNumberPassword =
   (number, password, navigate) => async (dispatch, getState) => {
-    const { loading } = getState().authentication;
-    if (loading) {
-      toast.error("Already processing a request. Please wait.");
-      return;
-    }
     dispatch(loginRequest());
     Swal.fire({
       title: "Logging in...",
@@ -215,11 +205,6 @@ export const loginNumberPassword =
   };
 
 export const otpSent = (email) => async (dispatch, getState) => {
-  const { loading } = getState().authentication;
-  if (loading) {
-    toast.error("Already processing a request. Please wait.");
-    return;
-  }
   dispatch(otpRequest());
   Swal.fire({
     title: "Sending OTP...",
@@ -264,11 +249,6 @@ export const otpSent = (email) => async (dispatch, getState) => {
 
 export const verifyOtp =
   (email, otp, navigate) => async (dispatch, getState) => {
-    const { loading } = getState().authentication;
-    if (loading) {
-      toast.error("Already processing a request. Please wait.");
-      return;
-    }
     dispatch(otpRequest());
     Swal.fire({
       title: "Verifying OTP...",
@@ -321,11 +301,6 @@ export const verifyOtp =
 
 export const signupJobseeker =
   (formData, navigate) => async (dispatch, getState) => {
-    const { loading } = getState().authentication;
-    if (loading) {
-      toast.error("Already processing a request. Please wait.");
-      return;
-    }
     dispatch(signupRequest());
     Swal.fire({
       title: "Signing up...",
@@ -371,11 +346,6 @@ export const signupJobseeker =
   };
 export const signupEmployer =
   (formData, navigate) => async (dispatch, getState) => {
-    const { loading } = getState().authentication;
-    if (loading) {
-      toast.error("Already processing a request. Please wait.");
-      return;
-    }
     dispatch(signupRequest());
     Swal.fire({
       title: "Signing up...",
@@ -423,11 +393,6 @@ export const signupEmployer =
   };
 
 export const logoutUser = () => (dispatch, getState) => {
-  const { loading } = getState().authentication;
-  if (loading) {
-    toast.error("Already processing a request. Please wait.");
-    return;
-  }
   dispatch(logout());
   toast.success("Logged out successfully!");
 };

@@ -24,6 +24,9 @@ import JobApplicationsList from "./Components/Job/JobPost/JobApplicationsList";
 import SingleJobApplicationView from "./Components/Job/JobPost/SingleJobApplicationView";
 import ShowSearchedJobs from "./Components/Job/ShowSearchedJobs";
 import GetResumeFeedback from "./Components/ResumeFeedback/GetResumeFeedback";
+import About from "./Components/InfoPages/About";
+import Contact from "./Components/InfoPages/Contact";
+import PrivacyPolicy from "./Components/InfoPages/PrivacyPolicy";
 function App() {
   const role =
     useSelector((state) => state.authentication.role) ||
@@ -47,6 +50,9 @@ function App() {
           {/* Authentication */}
           <Route path="/signup" element={<SignupPage />} />
           <Route path="/login" element={<LoginPage />} />
+          <Route path="/about" element={<About />} />
+          <Route path="/contact" element={<Contact />} />
+          <Route path="/privacy" element={<PrivacyPolicy />} />
           {/* Profile Routes */}
           {/* View Profile (any) */}
           <Route
@@ -114,32 +120,38 @@ function App() {
             }
           />
           {/* Apply Job Routes */}
-          <Route
-            path="/apply-job/:id"
-            element={
-              <ProtectedRoutes>
-                <ApplyJobPage />
-              </ProtectedRoutes>
-            }
-          />
+          {role !== "employer" && (
+            <Route
+              path="/apply-job/:id"
+              element={
+                <ProtectedRoutes>
+                  <ApplyJobPage />
+                </ProtectedRoutes>
+              }
+            />
+          )}
           {/* my all application */}
-          <Route
-            path="/my-applications"
-            element={
-              <ProtectedRoutes>
-                <MyApplicationsPage />
-              </ProtectedRoutes>
-            }
-          />
+          {role !== "employer" && (
+            <Route
+              path="/my-applications"
+              element={
+                <ProtectedRoutes>
+                  <MyApplicationsPage />
+                </ProtectedRoutes>
+              }
+            />
+          )}
           {/* my single application */}
-          <Route
-            path="/my-application/:id"
-            element={
-              <ProtectedRoutes>
-                <SingleApplicationPage />
-              </ProtectedRoutes>
-            }
-          />
+          {role !== "employer" && (
+            <Route
+              path="/my-application/:id"
+              element={
+                <ProtectedRoutes>
+                  <SingleApplicationPage />
+                </ProtectedRoutes>
+              }
+            />
+          )}
           {/* Job Post Routes */}
           {role === "employer" && (
             <Route

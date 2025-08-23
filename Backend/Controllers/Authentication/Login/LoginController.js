@@ -146,10 +146,10 @@ module.exports.SentOtp = async (req, res) => {
       },
     });
     const mailOptions = {
-  from: `"Click2Hire" <${process.env.Mail_User}>`,
-  to: email,
-  subject: "🔑 Your OTP Code - C2H",
-  html: `
+      from: `"Click2Hire" <${process.env.Mail_User}>`,
+      to: email,
+      subject: "🔑 Your OTP Code - C2H",
+      html: `
   <!DOCTYPE html>
   <html lang="en">
    <head>
@@ -172,7 +172,7 @@ module.exports.SentOtp = async (req, res) => {
          border: 1px solid #e5e7eb;
        }
        .header {
-         background: linear-gradient(90deg, #1e3a8a, #f97316);
+         background: linear-gradient(90deg, #3B82F6, #FB923C);
          padding: 25px 20px;
          text-align: center;
          color: #fff;
@@ -254,8 +254,7 @@ module.exports.SentOtp = async (req, res) => {
    </body>
   </html>
   `,
-};
-
+    };
 
     // Send email
     await transporter.sendMail(mailOptions);

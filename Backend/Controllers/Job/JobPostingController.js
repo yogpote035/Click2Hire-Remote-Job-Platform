@@ -336,7 +336,7 @@ exports.SingleApplicationForJobUpdateStatusByEmployer = async (req, res) => {
     <div style="max-width:650px; margin:auto; background:#fff; border-radius:10px; overflow:hidden; box-shadow:0 4px 12px rgba(0,0,0,0.08); border:1px solid #e0e0e0;">
       
       <!-- Header -->
-      <div style="background:linear-gradient(90deg, #1e3a8a, #f97316); padding:25px; text-align:center; color:#fff;">
+      <div style="background:linear-gradient(90deg, #3B82F6, #FB923C); padding:25px; text-align:center; color:#fff;">
         <!-- Inline Logo -->
         <div style="font-size:38px; font-weight:700; letter-spacing:2px; margin-bottom:8px;">
           <span style="color:#1e3a8a;">C</span>
