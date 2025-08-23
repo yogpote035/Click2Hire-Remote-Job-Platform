@@ -23,6 +23,7 @@ import SingleJobPostView from "./Components/Job/JobPost/SingleJobPostView";
 import JobApplicationsList from "./Components/Job/JobPost/JobApplicationsList";
 import SingleJobApplicationView from "./Components/Job/JobPost/SingleJobApplicationView";
 import ShowSearchedJobs from "./Components/Job/ShowSearchedJobs";
+import GetResumeFeedback from "./Components/ResumeFeedback/GetResumeFeedback";
 function App() {
   const role =
     useSelector((state) => state.authentication.role) ||
@@ -104,6 +105,14 @@ function App() {
             }
           />
           <Route path="/job/search" element={<ShowSearchedJobs />} />
+          <Route
+            path="/job/resume-scan"
+            element={
+              <ProtectedRoutes>
+                <GetResumeFeedback />
+              </ProtectedRoutes>
+            }
+          />
           {/* Apply Job Routes */}
           <Route
             path="/apply-job/:id"
@@ -196,6 +205,12 @@ function App() {
 
           {/* Right */}
           <div className="mt-4 sm:mt-0 flex space-x-4">
+            <Link
+              to="/job/resume-scan"
+              className="text-sm text-gray-600 hover:text-blue-600"
+            >
+              Scan Your Resume{" "}
+            </Link>
             <Link
               to="/about"
               className="text-sm text-gray-600 hover:text-blue-600"

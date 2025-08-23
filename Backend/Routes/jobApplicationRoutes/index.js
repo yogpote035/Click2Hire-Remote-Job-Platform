@@ -9,12 +9,12 @@ const upload = require("../../Middleware/upload");
 // Apply for a job
 router.post(
   "/apply",
+  VerifyToken,
   upload.fields([
     { name: "resume", maxCount: 1 }, // updated field name for both upload
     { name: "coverLetter", maxCount: 1 }, // updated field name for both upload
   ]),
   cloudinaryUploadMiddleware,
-  VerifyToken,
   jobApplicationController.applyForJob
 );
 

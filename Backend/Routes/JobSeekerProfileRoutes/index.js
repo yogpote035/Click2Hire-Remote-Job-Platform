@@ -8,12 +8,12 @@ const router = express.Router();
 router.get("/:userId", VerifyToken, JobseekerController.getProfileById);
 router.post(
   "/",
+  VerifyToken,
   upload.fields([
     { name: "profilePicture", maxCount: 1 }, // updated field name for both upload
     { name: "resumeUrl", maxCount: 1 },
   ]),
   cloudinaryUploadMiddleware,
-  VerifyToken,
   JobseekerController.createProfile
 );
 router.put(

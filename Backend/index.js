@@ -66,12 +66,18 @@ app.use("/api/employer/job-post", require("./Routes/JobPostingRoutes/index"));
 // -----------------------------------------------------------------------------------------------------
 
 // Apply Job And Operations Routes
-app.use("/api/jobseeker/apply-job", require("./Routes/jobApplicationRoutes/index"));
+app.use(
+  "/api/jobseeker/apply-job",
+  require("./Routes/jobApplicationRoutes/index")
+);
 // -----------------------------------------------------------------------------------------------------
 
 app.use("/api/job", require("./Routes/JobRoutes/index"));
 
 // -----------------------------------------------------------------------------------------------------
+
+// for scan resume
+app.use("/api/resume-scan", require("./Routes/ResumeScanRoute/index"));
 
 // Server Listening
 app.listen(PORT, () => {
