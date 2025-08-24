@@ -5,6 +5,13 @@ const VerifyToken = require("../../Middleware/VerifyToken");
 // company route get all and one
 router.get("/all-employer", VerifyToken, jobPostingController.getAllCompanies);
 router.get("/employer/:id", VerifyToken, jobPostingController.getCompanyById);
+// find candidate for recent job
+router.get(
+  "/candidate",
+  VerifyToken,
+  jobPostingController.suggestCandidatesForEmployer
+);
+router.get("/candidate/:id", VerifyToken, jobPostingController.getCandidateById);
 // Employer Protected Routes
 router.post("/", VerifyToken, jobPostingController.createJobPosting);
 router.get("/my-jobs", VerifyToken, jobPostingController.getMyJobs);

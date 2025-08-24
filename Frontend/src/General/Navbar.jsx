@@ -67,9 +67,16 @@ const Navbar = () => {
             <Link to="/" className="hover:text-blue-500">
               Home
             </Link>
-            <Link to="/jobs" className="hover:text-blue-500">
-              Jobs
-            </Link>
+            {role === "jobseeker" && (
+              <Link to="/jobs" className="hover:text-blue-500">
+                Jobs
+              </Link>
+            )}
+            {role === "employer" && (
+              <Link to="/candidates" className="hover:text-blue-500">
+                Find Talent
+              </Link>
+            )}
             <Link to="/companies" className="hover:text-blue-500">
               Companies
             </Link>

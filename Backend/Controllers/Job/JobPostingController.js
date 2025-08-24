@@ -2,6 +2,8 @@ const JobPosting = require("../../Models/Employer/JobPostingModel");
 const EmployerProfileModel = require("../../Models/Employer/EmployerProfileModel");
 const JobApplicationModel = require("../../Models/Employee/JobApplicationModel");
 const nodemailer = require("nodemailer");
+const JobPostingModel = require("../../Models/Employer/JobPostingModel");
+const JobSeekerProfileModel = require("../../Models/Employee/JobSeekerProfileModel");
 
 exports.createJobPosting = async (req, res) => {
   try {
@@ -477,5 +479,109 @@ exports.getCompanyById = async (req, res) => {
   } catch (error) {
     console.error("Error fetching company:", error);
     res.status(500).json({ success: false, message: "Server Error" });
+  }
+};
+// helper to normalize skill names
+const normalizeSkill = (skill) => {
+  if (!skill) return "";
+  let s = skill.toLowerCase().trim();
+
+  // map aliases → canonical form
+  const skillMap = {
+    react: "react",
+    reactjs: "react",
+    "react.js": "react",
+    node: "node",
+    nodejs: "node",
+    "node.js": "node",
+    express: "express",
+    expressjs: "express",
+    "express.js": "express",
+    mongo: "mongodb",
+    mongodb: "mongodb",
+    py: "python",
+    python3: "python",
+    "c++": "cpp",
+    cpp: "cpp",
+    js: "javascript",
+    javascript: "javascript",
+    "java script": "javascript",
+  };
+
+  return skillMap[s] || s; // return canonical skill if found, else normalized text
+};
+
+exports.suggestCandidatesForEmployer = async (req, res) => {
+  try {
+    if (req.user.role !== "employer") {
+      return res.status(401).json({ success: false, message: "Unauthorized" });
+    }
+
+    const employerId = req.user.userId;
+
+    // get recent jobs by this employer
+    const jobs = await JobPostingModel.find({ employerId }).sort({
+      createdAt: -1,
+    });
+
+    if (!jobs.length) {
+      return res.json({ success: true, data: [], message: "No jobs found." });
+    }
+
+    // normalize required skills
+    const allRequiredSkills = jobs.flatMap((job) => job.skillsRequired || []);
+    const uniqueSkills = [
+      ...new Set(allRequiredSkills.map((s) => normalizeSkill(s))),
+    ];
+
+    // get all candidates
+    const candidates = await JobSeekerProfileModel.find().select("-password");
+
+    // match candidates
+    const matchedCandidates = candidates
+      .map((c) => {
+        const candidateSkills = (c.skills || []).map((s) => normalizeSkill(s));
+        const matchedSkills = candidateSkills.filter((s) =>
+          uniqueSkills.includes(s)
+        );
+
+        return {
+          _id: c._id,
+          fullName: c.fullName,
+          email: c.email,
+          skills: c.skills,
+          resume: c.resumeUrl || c.resume, // support both fields
+          matchedSkills,
+          matchCount: matchedSkills.length,
+          matchPercentage: Math.round(
+            (matchedSkills.length / uniqueSkills.length) * 100
+          ),
+        };
+      })
+      .filter((c) => c.matchCount > 0)
+      .sort((a, b) => b.matchCount - a.matchCount);
+
+    res.json({ success: true, data: matchedCandidates });
+  } catch (err) {
+    res.status(500).json({ success: false, message: err.message });
+  }
+};
+
+exports.getCandidateById = async (req, res) => {
+  try {
+    const candidateId = req.params.id;
+    const candidate = await JobSeekerProfileModel.findById(candidateId).select(
+      "-password"
+    );
+
+    if (!candidate) {
+      return res
+        .status(404)
+        .json({ success: false, message: "Candidate not found" });
+    }
+
+    res.json({ success: true, data: candidate });
+  } catch (err) {
+    res.status(500).json({ success: false, message: err.message });
   }
 };

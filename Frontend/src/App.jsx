@@ -29,6 +29,8 @@ import Contact from "./Components/InfoPages/Contact";
 import PrivacyPolicy from "./Components/InfoPages/PrivacyPolicy";
 import CompaniesPage from "./Components/CompaniesInfo/CompaniesPage";
 import SingleCompanyPage from "./Components/CompaniesInfo/SingleCompanyPage";
+import AllCandidateShow from "./Components/CandidateShow/AllCandidateShow";
+import SingleCandidateShow from "./Components/CandidateShow/SingleCandidateShow";
 function App() {
   const role =
     useSelector((state) => state.authentication.role) ||
@@ -96,31 +98,37 @@ function App() {
             }
           />
           {/* Job Route Show And ... */}
-          <Route
-            path="/jobs"
-            element={
-              <ProtectedRoutes>
-                <AllJobsForSeeker />
-              </ProtectedRoutes>
-            }
-          />
-          <Route
-            path="/job/:id"
-            element={
-              <ProtectedRoutes>
-                <SingleJobView />
-              </ProtectedRoutes>
-            }
-          />
+          {role === "jobseeker" && (
+            <Route
+              path="/jobs"
+              element={
+                <ProtectedRoutes>
+                  <AllJobsForSeeker />
+                </ProtectedRoutes>
+              }
+            />
+          )}
+          {role === "jobseeker" && (
+            <Route
+              path="/job/:id"
+              element={
+                <ProtectedRoutes>
+                  <SingleJobView />
+                </ProtectedRoutes>
+              }
+            />
+          )}
           <Route path="/job/search" element={<ShowSearchedJobs />} />
-          <Route
-            path="/job/resume-scan"
-            element={
-              <ProtectedRoutes>
-                <GetResumeFeedback />
-              </ProtectedRoutes>
-            }
-          />
+          {role === "jobseeker" && (
+            <Route
+              path="/job/resume-scan"
+              element={
+                <ProtectedRoutes>
+                  <GetResumeFeedback />
+                </ProtectedRoutes>
+              }
+            />
+          )}
           {/* Apply Job Routes */}
           {role !== "employer" && (
             <Route
@@ -157,7 +165,7 @@ function App() {
           {/* Job Post Routes */}
           {role === "employer" && (
             <Route
-              path="post-job"
+              path="/post-job"
               element={
                 <ProtectedRoutes>
                   <EmployerJobs />
@@ -214,6 +222,26 @@ function App() {
               </ProtectedRoutes>
             }
           />
+          {role === "employer" && (
+            <Route
+              path="/candidates"
+              element={
+                <ProtectedRoutes>
+                  <AllCandidateShow />
+                </ProtectedRoutes>
+              }
+            />
+          )}
+          {role === "employer" && (
+            <Route
+              path="/candidates/:id"
+              element={
+                <ProtectedRoutes>
+                  <SingleCandidateShow />
+                </ProtectedRoutes>
+              }
+            />
+          )}
           <Route
             path="*"
             element={
@@ -235,12 +263,14 @@ function App() {
 
           {/* Right */}
           <div className="mt-4 sm:mt-0 flex space-x-4">
-            <Link
-              to="/job/resume-scan"
-              className="text-sm text-gray-600 hover:text-blue-600"
-            >
-              Scan Your Resume{" "}
-            </Link>
+            {role === "jobseeker" && (
+              <Link
+                to="/job/resume-scan"
+                className="text-sm text-gray-600 hover:text-blue-600"
+              >
+                Scan Your Resume{" "}
+              </Link>
+            )}
             <Link
               to="/about"
               className="text-sm text-gray-600 hover:text-blue-600"

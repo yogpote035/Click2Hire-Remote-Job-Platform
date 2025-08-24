@@ -8,12 +8,12 @@ const initialState = {
   loading: false,
   success: false,
   error: null,
-  allCompany: [], // all company
-  company: null, // single company
+  allCandidate: [], // all company
+  candidate: null, // single company
 };
 
-const companySlice = createSlice({
-  name: "companySlice",
+const candidateShowSlice = createSlice({
+  name: "candidateShow",
   initialState,
   reducers: {
     requestStart: (state) => {
@@ -21,22 +21,22 @@ const companySlice = createSlice({
       state.error = null;
       state.success = false;
     },
-    allCompanySuccess: (state, action) => {
+    allCandidateSuccess: (state, action) => {
       state.loading = false;
       state.success = true;
-      state.allCompany = action.payload;
+      state.allCandidate = action.payload;
     },
-    singleCompanySuccess: (state, action) => {
+    singleCandidate: (state, action) => {
       state.loading = false;
       state.success = true;
-      state.company = action.payload; // single or multiple
+      state.candidate = action.payload; // single or multiple
     },
     requestFail: (state, action) => {
       state.loading = false;
       state.error = action.payload;
       toast.error(action.payload);
     },
-    clearCompany: (state) => {
+    clearCandidate: (state) => {
       state.job = null;
       state.jobs = [];
       state.success = false;
@@ -47,16 +47,16 @@ const companySlice = createSlice({
 
 export const {
   requestStart,
-  allCompanySuccess,
-  singleCompanySuccess,
+  allCandidateSuccess,
+  singleCandidate,
   requestFail,
-  clearCompany,
-} = companySlice.actions;
+  clearCandidate,
+} = candidateShowSlice.actions;
 
-export default companySlice.reducer;
+export default candidateShowSlice.reducer;
 
 // get all employer as company ....
-export const getAllCompanies = () => async (dispatch, getState) => {
+export const getAllCandidate = () => async (dispatch, getState) => {
   dispatch(requestStart());
   try {
     Swal.fire({
@@ -68,9 +68,7 @@ export const getAllCompanies = () => async (dispatch, getState) => {
       getState().authentication.token || localStorage.getItem("token");
 
     const { data } = await axios.get(
-      `${
-        import.meta.env.VITE_BACKEND_API
-      }/employer/job-post/all-employer`,
+      `${import.meta.env.VITE_BACKEND_API}/employer/job-post/candidate`,
       {
         headers: {
           Authorization: `Bearer ${token}`,
@@ -78,7 +76,7 @@ export const getAllCompanies = () => async (dispatch, getState) => {
       }
     );
 
-    dispatch(allCompanySuccess(data?.data));
+    dispatch(allCandidateSuccess(data?.data));
     Swal.close();
   } catch (error) {
     Swal.close();
@@ -86,11 +84,11 @@ export const getAllCompanies = () => async (dispatch, getState) => {
   }
 };
 // get single employer as company ....
-export const getCompanyById = (id) => async (dispatch, getState) => {
+export const getCandidateById = (id) => async (dispatch, getState) => {
   dispatch(requestStart());
   try {
     Swal.fire({
-      title: "Wait!!, We are Getting Information About Company...",
+      title: "Wait!!, We are Getting Information About Candidate...",
       allowOutsideClick: false,
       didOpen: () => Swal.showLoading(),
     });
@@ -98,17 +96,15 @@ export const getCompanyById = (id) => async (dispatch, getState) => {
       getState().authentication.token || localStorage.getItem("token");
 
     const { data } = await axios.get(
-      `${
-        import.meta.env.VITE_BACKEND_API
-      }/employer/job-post/employer/${id}`,
+      `${import.meta.env.VITE_BACKEND_API}/employer/job-post/candidate/${id}`,
       {
         headers: {
           Authorization: `Bearer ${token}`,
         },
       }
     );
-
-    dispatch(singleCompanySuccess(data?.data));
+    console.log("data : ", data);
+    dispatch(singleCandidate(data?.data));
     Swal.close();
   } catch (error) {
     Swal.close();

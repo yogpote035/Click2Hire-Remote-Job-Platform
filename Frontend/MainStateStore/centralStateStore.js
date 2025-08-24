@@ -7,6 +7,7 @@ import JobseekerApplyJobReducer from "../AllStateStore/JobSeeker/JobApplicationS
 import jobReducer from "../AllStateStore/Job/JobSlice.js";
 import resumeReducer from "../AllStateStore/Resume/resumeSlice.jsx";
 import companyReducer from "../AllStateStore/CompanyInfo/CompanySlice.js";
+import candidateReducer from "../AllStateStore/CandidateShow/CandidateShowSlice.js";
 const Store = configureStore({
   reducer: {
     authentication: authenticationReducer, // Authentication state,all login and signup related data request come and go from here[CRUD]
@@ -17,6 +18,7 @@ const Store = configureStore({
     job: jobReducer, //get all job matched to skill / search job(any) / single job
     resume: resumeReducer, // scan resume and get feedback
     company: companyReducer, // all company Operations
+    candidate: candidateReducer, // all candidate for job and single candidate
   },
 });
 export default Store;
