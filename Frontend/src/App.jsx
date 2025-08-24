@@ -43,7 +43,7 @@ function App() {
         }}
       />
 
-      <div className="container mx-auto mt-10 py-10 pb-12 mb-5">
+      <div className="container mx-auto mt-10 py-9 pb-12 mb-5">
         <Routes>
           {/* update this page later */}
           <Route path="/" element={<HomePage />} />

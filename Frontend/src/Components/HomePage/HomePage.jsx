@@ -3,7 +3,7 @@ import toast from "react-hot-toast";
 import { useDispatch, useSelector } from "react-redux";
 import { Link, useNavigate } from "react-router-dom";
 import { HomePageJobs } from "../../../AllStateStore/Job/JobSlice";
-
+import {MoveRight} from "lucide-react";
 const HomePage = () => {
   const role =
     useSelector((state) => state.authentication.role) ||
@@ -109,8 +109,10 @@ const HomePage = () => {
               <p className="text-gray-600">
                 {job?.companyName} {job?.location}
               </p>
-              <p className="text-sm text-gray-500 mb-4">
-                ₹{job?.salaryRange?.min}-{job?.salaryRange?.max}
+              <p className="text-sm text-gray-500 mb-4 flex items-center gap-2">
+                ₹{job?.salaryRange?.min}
+                <MoveRight  size={15}/>
+                {job?.salaryRange?.max}
               </p>
               <button
                 onClick={() => {
@@ -124,13 +126,15 @@ const HomePage = () => {
                     navigate(`/login`);
                   }
                 }}
-                className="bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700 transition"
+                className="w-full bg-gradient-to-r from-blue-600 to-blue-500 text-white font-medium px-4 py-2 rounded-lg 
+             shadow-md hover:from-blue-400 hover:to-blue-500 transform hover:-translate-y-0.5 
+             transition-all duration-200 ease-in-out"
               >
                 {role === "employer"
                   ? "View Applicants"
                   : role === "jobseeker"
                   ? "Apply Now"
-                  : "Create Profile For Apply This Job"}
+                  : "Create Profile To Apply"}
               </button>
             </div>
           ))}

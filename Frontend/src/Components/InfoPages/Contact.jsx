@@ -27,7 +27,7 @@ const Contact = () => {
             </li>
             <li className="flex items-center space-x-3">
               <span className="text-indigo-600 text-2xl">📞</span>
-              <span>+91 98765 43210</span>
+              <span>+91 12345 67890</span>
             </li>
             <li className="flex items-center space-x-3">
               <span className="text-indigo-600 text-2xl">📍</span>
