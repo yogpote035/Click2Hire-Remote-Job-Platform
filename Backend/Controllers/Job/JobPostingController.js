@@ -442,3 +442,40 @@ exports.SingleApplicationForJobUpdateStatusByEmployer = async (req, res) => {
     res.status(500).json({ success: false, message: `Error, ${err?.message}` });
   }
 };
+
+// Get all companies (for "Companies" section)
+exports.getAllCompanies = async (req, res) => {
+  console.log("req in all companies");
+  try {
+    const companies = await EmployerProfileModel.find({});
+
+    res.status(200).json({
+      success: true,
+      count: companies.length,
+      data: companies,
+    });
+  } catch (error) {
+    console.error("Error fetching companies:", error);
+    res.status(500).json({ success: false, message: "Server Error" });
+  }
+};
+
+// Get single company by ID
+exports.getCompanyById = async (req, res) => {
+  try {
+    const company = await EmployerProfileModel.findById(req.params.id).populate(
+      "userId"
+    );
+
+    if (!company) {
+      return res
+        .status(404)
+        .json({ success: false, message: "Company not found" });
+    }
+
+    res.status(200).json({ success: true, data: company });
+  } catch (error) {
+    console.error("Error fetching company:", error);
+    res.status(500).json({ success: false, message: "Server Error" });
+  }
+};

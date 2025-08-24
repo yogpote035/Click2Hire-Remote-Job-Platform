@@ -27,6 +27,8 @@ import GetResumeFeedback from "./Components/ResumeFeedback/GetResumeFeedback";
 import About from "./Components/InfoPages/About";
 import Contact from "./Components/InfoPages/Contact";
 import PrivacyPolicy from "./Components/InfoPages/PrivacyPolicy";
+import CompaniesPage from "./Components/CompaniesInfo/CompaniesPage";
+import SingleCompanyPage from "./Components/CompaniesInfo/SingleCompanyPage";
 function App() {
   const role =
     useSelector((state) => state.authentication.role) ||
@@ -196,6 +198,22 @@ function App() {
               }
             />
           )}
+          <Route
+            path="/companies"
+            element={
+              <ProtectedRoutes>
+                <CompaniesPage />
+              </ProtectedRoutes>
+            }
+          />
+          <Route
+            path="/companies/:id"
+            element={
+              <ProtectedRoutes>
+                <SingleCompanyPage />
+              </ProtectedRoutes>
+            }
+          />
           <Route
             path="*"
             element={
