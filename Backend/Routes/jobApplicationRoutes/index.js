@@ -5,7 +5,17 @@ const jobApplicationController = require("../../Controllers/Job/JobApplyingContr
 const VerifyToken = require("../../Middleware/VerifyToken");
 const cloudinaryUploadMiddleware = require("../../Middleware/cloudinaryUploadMiddleware");
 const upload = require("../../Middleware/upload");
-
+const rateLimit = require("express-rate-limit");
+const limiter = rateLimit({
+  windowMs: 1 * 60 * 1000, // 1 minute
+  max: 3, // limit each IP to 5 requests per windowMs
+  message: {
+    ok: false,
+    error:
+      "Too many requests. Please try again later. You Have Limit To Download Application, 3 Request per Minute",
+  },
+  headers: true, // send rate limit info in headers
+});
 // Apply for a job
 router.post(
   "/apply",
@@ -38,6 +48,7 @@ router.delete(
 // download application
 router.get(
   "/:id/download",
+  limiter,
   VerifyToken,
   jobApplicationController.downloadApplication
 );

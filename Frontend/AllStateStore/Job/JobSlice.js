@@ -57,6 +57,22 @@ export const {
 export default jobApplicationSlice.reducer;
 
 // Get All Applications of current Jobseeker
+export const HomePageJobs = () => async (dispatch, getState) => {
+  dispatch(requestStart());
+  try {
+    const token =
+      getState().authentication.token || localStorage.getItem("token") || "";
+
+    const { data } = await axios.get(
+      `${import.meta.env.VITE_BACKEND_API}/job/home-page-jobs`,
+      { headers: { Authorization: `Bearer ${token}` } }
+    );
+
+    dispatch(requestMultipleSuccess(data));
+  } catch (error) {
+    dispatch(requestFail(error.response?.data?.message || error.message));
+  }
+};
 export const getAllJobs = () => async (dispatch, getState) => {
   dispatch(requestStart());
   Swal.fire({

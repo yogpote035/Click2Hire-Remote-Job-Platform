@@ -1,7 +1,8 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import toast from "react-hot-toast";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { Link, useNavigate } from "react-router-dom";
+import { HomePageJobs } from "../../../AllStateStore/Job/JobSlice";
 
 const HomePage = () => {
   const role =
@@ -12,6 +13,11 @@ const HomePage = () => {
   // search states
   const [query, setQuery] = useState("");
   const [location, setLocation] = useState("");
+  const allJobs = useSelector((state) => state.job.allJobs);
+  const dispatch = useDispatch();
+  useEffect(() => {
+    dispatch(HomePageJobs());
+  }, []);
 
   const handleSearch = () => {
     if (!query && !location) {
@@ -92,18 +98,39 @@ const HomePage = () => {
       <section className="max-w-6xl mx-auto py-12 px-4">
         <h3 className="text-2xl font-bold mb-6 text-gray-800">Featured Jobs</h3>
         <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6">
-          {[1, 2, 3, 4, 5, 6].map((job) => (
+          {allJobs?.map((job) => (
             <div
-              key={job}
+              key={job?._id}
               className="bg-white shadow-md rounded-lg p-5 border hover:shadow-lg transition"
             >
               <h4 className="text-lg font-semibold text-gray-900">
-                Software Engineer
+                {job?.title}
               </h4>
-              <p className="text-gray-600">Google • New York, USA</p>
-              <p className="text-sm text-gray-500 mb-4">₹15 LPA</p>
-              <button className="bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700 transition">
-                {role === "employer" ? "View Applicants" : "Apply Now"}
+              <p className="text-gray-600">
+                {job?.companyName} {job?.location}
+              </p>
+              <p className="text-sm text-gray-500 mb-4">
+                ₹{job?.salaryRange?.min}-{job?.salaryRange?.max}
+              </p>
+              <button
+                onClick={() => {
+                  if (role === "jobseeker") {
+                    navigate(`/job/${job?._id}`);
+                  }
+                  if (role === "employer") {
+                    navigate(`/post-job/${job?._id}/applications`);
+                  }
+                  if (!role) {
+                    navigate(`/login`);
+                  }
+                }}
+                className="bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700 transition"
+              >
+                {role === "employer"
+                  ? "View Applicants"
+                  : role === "jobseeker"
+                  ? "Apply Now"
+                  : "Create Profile For Apply This Job"}
               </button>
             </div>
           ))}

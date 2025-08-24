@@ -124,3 +124,43 @@ exports.searchJobs = async (req, res) => {
     res.status(500).json({ success: false, message: error.message });
   }
 };
+exports.JobBasedOnLocation = async (req, res) => { // for home page job show
+  try {
+    if (req?.user?.userId) {
+      const JobseekerProfile = await JobSeekerProfileModel.findOne({
+        userId: req.user.userId,
+      });
+
+      let jobs = [];
+
+      if (JobseekerProfile && JobseekerProfile.location) {
+        // Find jobs matching location (case-insensitive regex)
+        jobs = await JobPostingModel.find({
+          location: { $regex: new RegExp(JobseekerProfile.location, "i") },
+        });
+      }
+
+      if (jobs.length > 0) {
+        // Found jobs in user’s location
+        return res.status(200).json(jobs);
+      } else {
+        // No jobs in user’s location --> return trending jobs (highest salary)
+        const trendingJobs = await JobPostingModel.find()
+          .sort({ "salaryRange.max": -1 }) // highest salary first
+          .limit(6); // top 10 trending
+
+        return res.status(200).json(trendingJobs);
+      }
+    } else {
+      // No user found --> just send trending jobs
+      const trendingJobs = await JobPostingModel.find()
+        .sort({ "salaryRange.max": -1 })
+        .limit(6);
+
+      return res.status(200).json(trendingJobs);
+    }
+  } catch (error) {
+    console.error("Error fetching jobs:", error);
+    res.status(200).json([]); // fail-safe: return empty array (no error on home page)
+  }
+};

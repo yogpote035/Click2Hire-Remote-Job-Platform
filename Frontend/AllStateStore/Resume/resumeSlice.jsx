@@ -85,11 +85,7 @@ export const scanResume = (file) => async (dispatch, getState) => {
   } catch (error) {
     Swal.close();
     dispatch(
-      requestFail(
-        error.response?.data?.message?.error ||
-          error.response?.data?.message ||
-          error.message
-      )
+      requestFail(error.response?.data?.message?.error || error.response?.data)
     );
   }
 };
