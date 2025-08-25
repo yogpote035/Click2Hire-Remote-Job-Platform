@@ -57,7 +57,7 @@ const SingleJobPostView = () => {
   const handleDelete = async () => {
     try {
       setActionLoading(true);
-      await dispatch(deleteJobPosting(job._id,navigate));
+      await dispatch(deleteJobPosting(job._id, navigate));
     } catch (err) {
       Swal.fire("Error", err || "Something went wrong.", "error");
     } finally {
@@ -260,7 +260,11 @@ const SingleJobPostView = () => {
         </>
       ) : (
         // Show JobForm for editing
-        <JobForm initialData={job} onSubmit={handleEditSubmit} />
+        <JobForm
+          initialData={job}
+          setEditing={setEditing}
+          onSubmit={handleEditSubmit}
+        />
       )}
     </div>
   );
