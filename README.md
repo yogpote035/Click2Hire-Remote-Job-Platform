@@ -81,7 +81,7 @@ Our proposed system focuses on:
 **13. Demo:**
 
 ## Demo
-[🎥 Download Demo Video](./frontend/public/demo.mp4)
+[🎥 Download Demo Video](./Frontend/public/demo.mp4)
 
 
 
