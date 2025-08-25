@@ -2,3 +2,6 @@
 node_modules
 dist
 Dummy Data
+job_postings_200.json
+job_postings_clean.json
+job_postings_LPA
