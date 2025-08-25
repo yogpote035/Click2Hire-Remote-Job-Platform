@@ -12,10 +12,6 @@
 - **Division:** A (Batch: C4)
 - **Department:** TY.B.Sc.CS
 
-**3. Guide Name:**
-
-- **Guide:** Yogesh D. Pote
-  
 **4. Introduction:**
 In the digital economy, remote jobs have become increasingly popular. However, many job seekers face difficulties in accessing verified opportunities, and employers often struggle with remote hiring workflows. This project aims to bridge that gap by developing a secure, scalable, and user-friendly Remote Job Platform using the MERN stack (MongoDB, Express.js, React.js, Node.js). The platform connects job seekers and employers efficiently while providing administrative oversight.
 
@@ -83,11 +79,11 @@ Our proposed system focuses on:
 
 **13. Screenshots (To be added after implementation):**
 
-- Homepage
-- Login/Signup Page
-- Job Listing Page
-- Employer Dashboard
-- Admin Panel
+<video width="600" controls>
+  <source src="./frontend/public/demo.mp4" type="video/mp4" />
+  Your browser does not support the video tag.
+</video>
+
 
 **14. Testing:**
 
