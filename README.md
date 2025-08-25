@@ -83,6 +83,8 @@ Our proposed system focuses on:
 ## Demo
 [🎥 Download Demo Video](./Frontend/public/demo.gif)
 
+## Demo
+![Demo Preview](https://goto.freeconvert.com/68abf73a162c3fb188c050e8)
 
 
 **14. Testing:**
