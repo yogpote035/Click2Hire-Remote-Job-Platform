@@ -15,18 +15,16 @@ const allowedOrigins = [
   "https://click2-hire-remote-job-platform-git-main-click2hires-projects.vercel.app",
   "https://click2-hire-remote-job-platform-r0iq7z4zu-click2hires-projects.vercel.app",
 ];
-
 const corsOptions = {
   origin: function (origin, callback) {
-    console.log("CORS Origin:", origin);
+    console.log("🔍 CORS Origin Check:", origin);
     if (!origin || allowedOrigins.includes(origin)) {
       return callback(null, true);
     } else {
-      console.error("CORS error: Origin not allowed:", origin);
+      console.error("❌ CORS Rejected:", origin);
       return callback(new Error("Not allowed by CORS"));
     }
   },
-  methods: ["GET", "HEAD", "POST", "PUT", "DELETE", "OPTIONS"],
   credentials: true,
 };
 
