@@ -1,32 +1,20 @@
-// controllers/jobApplicationController.js
 const JobApplicationModel = require("../../Models/Employee/JobApplicationModel");
 const JobPostingModel = require("../../Models/Employer/JobPostingModel");
 const JobSeekerProfileModel = require("../../Models/Employee/JobSeekerProfileModel");
 
 exports.applyForJob = async (req, res) => {
   try {
-    console.log("Request in apply job: ");
-    console.log("Request body: ", req.body);
     if (req.user.role !== "jobseeker") {
       return res.status(401).json({ message: "Only jobseekers can apply" });
     }
 
-    // If applied  then not accept second application
-
-    let { jobPostId, resume, coverLetter } = req.body;
-
-    // if present in req.body
-    if (resume) {
-      resume.url = resume;
-    }
-    if (coverLetter) {
-      coverLetter.url = coverLetter;
-    }
+    const { jobPostId, resume, coverLetter } = req.body;
 
     if (!jobPostId) {
       return res.status(400).json({ message: "Job Id is required" });
     }
 
+    // Get jobseeker profile
     const profile = await JobSeekerProfileModel.findOne({
       userId: req.user.userId,
     });
@@ -36,55 +24,82 @@ exports.applyForJob = async (req, res) => {
         .json({ message: "Profile not found. Complete your profile first." });
     }
 
-    const activeJob = JobPostingModel.findById(jobPostId);
+    // Check job is active
+    const activeJob = await JobPostingModel.findById(jobPostId);
+    if (!activeJob) {
+      return res.status(404).json({ message: "Job not found" });
+    }
     if (activeJob.status === "Closed") {
       return res
         .status(401)
-        .json({ message: "Job is Closed No Longer Application Accepting" });
+        .json({ message: "Job is closed. No longer accepting applications." });
     }
 
-    const AppliedApplication = await JobApplicationModel.find({
-      jobPostId: jobPostId,
-      userProfileId: profile,
+    // Prevent duplicate application
+    const existingApplication = await JobApplicationModel.findOne({
+      jobPostId,
+      userProfileId: profile._id,
     });
-
-    if (AppliedApplication?.length) {
+    if (existingApplication) {
       return res.status(400).json({
         message:
-          "Your Application for This Job Already Exists, You Can Edit or Delete Application",
+          "You already applied for this job. You can edit or delete your application.",
       });
     }
 
+    // Handle resume & coverLetter
+    let newResume = null;
+    let newCoverLetter = null;
+
+    // Case 1: If coming from req.body (URL)
+    if (resume) {
+      newResume = { url: resume };
+    }
+    if (coverLetter) {
+      newCoverLetter = { url: coverLetter };
+    }
+    // console.log("resume: Link: ", resume);
+    // console.log("----------------");
+    // console.log("new resume: Link: ", newResume);
+    // console.log("---------------");
+    // console.log("coverLetter: Link: ", coverLetter);
+    // console.log("---------------");
+    // console.log("new coverLetter: Link: ", newCoverLetter);
+    // Case 2: If uploaded via middleware (Cloudinary)
     if (req?.uploadResults?.resume) {
-      resume = {
+      newResume = {
         url: req.uploadResults.resume.url,
         publicId: req.uploadResults.resume.publicId,
       };
     }
     if (req?.uploadResults?.coverLetter) {
-      coverLetter = {
+      newCoverLetter = {
         url: req.uploadResults.coverLetter.url,
         publicId: req.uploadResults.coverLetter.publicId,
       };
     }
-    console.log("profile obj: ", resume);
-    console.log("--------");
-    console.log("resume obj: ", coverLetter);
-    console.log("--------");
-    if (!resume || !coverLetter) {
+    // console.log("After Req.file ");
+    // console.log("coverLetter: Link: ", coverLetter);
+    // console.log("---------------");
+    // console.log("new coverLetter: Link: ", newCoverLetter);
+    // If you want to make both required
+    if (!newResume || !newCoverLetter) {
       return res
         .status(400)
-        .json({ message: "Resume And Cover Letter is Required!!" });
+        .json({ message: "Resume and Cover Letter are required!" });
     }
+
+    // Create application
     const application = new JobApplicationModel({
       jobPostId,
       userProfileId: profile._id,
-      resume,
-      coverLetter,
+      resume: newResume,
+      coverLetter: newCoverLetter,
     });
 
     await application.save();
-
+  
+    // Update job’s application count
     await JobPostingModel.updateOne(
       { _id: jobPostId },
       { $inc: { applicationCount: 1 } }
@@ -127,6 +142,7 @@ exports.getMyApplications = async (req, res) => {
 // Get single application (jobseeker can see their own)
 exports.getApplication = async (req, res) => {
   try {
+    console.log("req in single application by jobseeker");
     const profile =
       req.user.role === "jobseeker"
         ? await JobSeekerProfileModel.findOne({ userId: req.user.userId })
@@ -141,7 +157,7 @@ exports.getApplication = async (req, res) => {
 
     if (!application)
       return res.status(404).json({ message: "Application not found" });
-
+    console.log(application);
     res.status(200).json({ success: true, data: application });
   } catch (error) {
     res.status(500).json({ message: error.message });
