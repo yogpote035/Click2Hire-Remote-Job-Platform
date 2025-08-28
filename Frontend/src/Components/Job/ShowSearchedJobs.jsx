@@ -71,7 +71,7 @@ const ShowSearchedJobs = () => {
                 <p className="text-gray-600 text-sm">
                   {isExpanded
                     ? job.description
-                    : job.description.slice(0, 50) + "..."}
+                    : job.description.slice(0, 20) + "..."}
                 </p>
                 <button
                   className="text-indigo-500 text-sm mt-1 hover:underline"
