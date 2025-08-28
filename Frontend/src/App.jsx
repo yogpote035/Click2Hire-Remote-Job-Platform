@@ -108,16 +108,14 @@ function App() {
               }
             />
           )}
-          {role === "jobseeker" && (
-            <Route
-              path="/job/:id"
-              element={
-                <ProtectedRoutes>
-                  <SingleJobView />
-                </ProtectedRoutes>
-              }
-            />
-          )}
+          <Route
+            path="/job/:id"
+            element={
+              <ProtectedRoutes>
+                <SingleJobView />
+              </ProtectedRoutes>
+            }
+          />
           <Route path="/job/search" element={<ShowSearchedJobs />} />
           {role === "jobseeker" && (
             <Route
