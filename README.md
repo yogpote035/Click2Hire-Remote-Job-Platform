@@ -6,20 +6,6 @@
 [![Tech Stack](https://img.shields.io/badge/Stack-MERN-green)]()
 [![License](https://img.shields.io/badge/License-MIT-yellow)]()
 
-## 📋 Table of Contents
-
-- [Overview](#overview)
-- [Features](#features)
-- [Tech Stack](#tech-stack)
-- [Getting Started](#getting-started)
-- [Project Structure](#project-structure)
-- [Modules](#modules)
-- [Demo](#demo)
-- [API Documentation](#api-documentation)
-- [Contributing](#contributing)
-- [Future Enhancements](#future-enhancements)
-- [License](#license)
-
 ## 🌟 Overview
 
 Click2Hire is a comprehensive remote job platform designed to bridge the gap between job seekers and employers in the digital economy. Unlike traditional job platforms that require premium access for full features, Click2Hire focuses on simplicity, accessibility, and is specifically tailored for remote work opportunities.
