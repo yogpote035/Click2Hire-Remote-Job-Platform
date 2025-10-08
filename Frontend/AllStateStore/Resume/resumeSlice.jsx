@@ -75,7 +75,7 @@ export const scanResume = (file) => async (dispatch, getState) => {
       {
         loading: "Wait!! Your feedback is on the way...",
         success: <b>Feedback received!</b>,
-        error: <b>Could not get feedback.</b>,
+        error: <b>Could not get Resume feedback.</b>,
       }
     );
 
@@ -83,9 +83,10 @@ export const scanResume = (file) => async (dispatch, getState) => {
     Swal.close();
     toast.remove();
   } catch (error) {
+    console.log(error);
     Swal.close();
     dispatch(
-      requestFail(error.response?.data?.message?.error || error.response?.data)
+      requestFail(error.response?.data?.message || error.response?.data?.message||error?.error||error?.message)
     );
   }
 };

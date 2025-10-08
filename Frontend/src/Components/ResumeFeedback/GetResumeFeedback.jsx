@@ -66,8 +66,8 @@ export default function GetResumeFeedback() {
 
       {/* Error Display */}
       {error && (
-        <div className="mt-4 bg-red-100 text-red-700 p-3 rounded-lg border border-red-300">
-          ❌ {error}
+        <div className="mt-4 bg-red-100 text-red-700 p-3 rounded-lg border border-red-300 flex items-center ">
+          <span className="text-2xl mb-2 pr-2">⚠️</span> {" "}{error}
         </div>
       )}
 
